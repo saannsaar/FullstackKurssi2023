@@ -1,0 +1,28 @@
+li>button {
+    margin-left: 10px;
+}
+
+li {
+    margin-bottom: 4px;
+}
+
+#successful {
+    color: rgb(76, 189, 76);
+    background: lightgreen;
+    font-size: large;
+    border-style: solid;
+    border-radius: 2px;
+    padding: 5px;
+    margin-bottom: 15px;
+
+}
+
+#failed {
+    color:rgb(221, 70, 70);
+    background-color: red;
+    font-size:large;
+    border-style: solid;
+    border-radius: 2px;
+    padding: 5px;
+    margin-bottom: 15px;
+}
