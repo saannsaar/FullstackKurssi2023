@@ -2,34 +2,58 @@ const blogsRouter = require('express').Router()
 
 
 const Blog = require('../models/blog')
+const {userExtractor } = require('../utils/middleware')
+
+
 
 
 // Haetaan kaikki blogit
 blogsRouter.get('/', async (request, response) => {
-   const blogs = await Blog.find({})
+   const blogs = await Blog.find({}).populate('user', {username: 1, name: 1})
    console.log(blogs)
    response.json(blogs)
 })
 
 
 // Lisätään uusi blogi tietokantaan
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', userExtractor,  async (request, response) => {
     const body = request.body
-  
+
+   console.log(body)
+    const user = request.user
+    console.log(user)
+    if (!user) {
+      return response.status(401).json({error: "You cant do that"})
+    }
+
+    
     // Luodaan uusi blogi
     const blog = new Blog({
+
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: body.likes
+        likes: body.likes ? body.likes : 0,
+        user: user._id
+       
     })
     
 // Tallennetaan
    const savedBlog = await blog.save()
+    // console.log(user.blogs)
+    // console.log(savedBlog._id)
+
+   
+   // Uusi blogi (sen id) lisätään käyttäjän jo olemassaoleviin blogeihin
+   user.blogs = user.blogs.concat(savedBlog._id)
+
+   //console.log(user)
+   await user.save()
+   
    response.status(201).json(savedBlog)
 })
 
-// Poistetaan blogi id:n perusteella tietokannasta
+
 blogsRouter.get('/:id', async (request, response) => {
     const blog = await Blog.findById(request.params.id)
     if (blog) {
@@ -39,9 +63,19 @@ blogsRouter.get('/:id', async (request, response) => {
     }
   })
 
+// Poistetaan blogi id:n perusteella tietokannasta
+  blogsRouter.delete('/:id', userExtractor, async (request, response) => {
+    console.log("delete!!!!")
+    const findBlog = await Blog.findById(request.params.id)
+    console.log(findBlog)
+    const user = request.user
+    if (!user || findBlog.user.toString() !== user.id.toString()) {
+      return response.status(401).json({error: "You cant do that!"})
+    }
 
-  blogsRouter.delete('/:id', async (request, response) => {
-    await Blog.findByIdAndRemove(request.params.id)
+    user.blogs = user.blogs.filter(blog => blog.toString() !== findBlog.id.toString())
+    await user.save()
+    await findBlog.remove()
     response.status(204).end()
   })
   

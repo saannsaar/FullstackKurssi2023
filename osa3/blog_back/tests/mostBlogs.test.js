@@ -62,7 +62,7 @@ describe('author who has most blogs', () => {
         expect(result).toEqual(expexted)
       })
 
-      t
+      
 })
 
 
