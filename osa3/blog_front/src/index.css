@@ -7,11 +7,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
 #blogsdiv>div {
   margin-bottom: 15px;
   background-color: rgb(210, 184, 184);
@@ -20,6 +15,14 @@ code {
 }
 
 input[type=text] {
+  width:100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid rgb(241, 199, 241);
+  box-sizing: border-box;
+}
+input[type=password] {
   width:100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -59,4 +62,20 @@ input[type=submit]:hover {
 #blogsdiv {
   width: 40vw;
   padding-left: 10px;
+}
+
+.blogi {
+   margin: 8px;
+   background-color: #ad6499;
+   border: #ce93be 2px solid;
+}
+
+#loginformi {
+  background-color: #ce93be;
+  padding: 20px;
+  margin: 20px;
+}
+
+h3 {
+  color: rgb(160, 230, 228)
 }
