@@ -1,9 +1,20 @@
 
 import { useState } from "react"
 
-const Blog = ({blog}) => {
 
+const Blog = ({blog, updateBlog}) => {
+ 
+  
+  
   const [showMoreInfo, setShowMoreInfo] = useState(false)
+
+  const handleLike = () => {
+    blog.likes = blog.likes +1
+    updateBlog(blog)
+  }
+
+    
+
 
   if (!showMoreInfo) {
     return (
@@ -19,7 +30,8 @@ const Blog = ({blog}) => {
   <p><strong>Author: </strong> {blog.author} </p>
   <p><strong>URL: </strong> {blog.url} </p>
   <p> <strong>This blog has: </strong> {blog.likes} <strong> likes!</strong> 
-  <button>Like</button></p>
+  <button onClick={handleLike}>Like</button></p>
+  <p>{blog.user.username}</p>
 <button onClick={() => setShowMoreInfo(false)}>Hide</button>
 </div> 
 

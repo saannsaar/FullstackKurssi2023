@@ -11,6 +11,7 @@ const getAll = () => {
 }
 
 const create = async newObject => {
+  console.log("blogs.js")
   const config = {
     headers: { Authorization: token },
   }
@@ -18,8 +19,15 @@ const create = async newObject => {
   return response.data
 }
 
-const update = (id, newObject) => {
-  const request = axios.put(`${ baseUrl } /${id}`, newObject)
+const update = async (id, newObject) => {
+ console.log(newObject)
+  const config = {
+    headers: { Authorization: token },
+  }
+  const address = baseUrl.concat("/").concat(id)
+
+  
+  const request = axios.put(address, newObject, config)
   return request.then(response => response.data)
 }
 

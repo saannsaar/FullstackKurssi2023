@@ -66,6 +66,7 @@ const App = () => {
     
     
     blogFormRef.current.toggleVisibility()
+    console.log(newblogObject)
     blogService.create(newblogObject).then(returnedBlog => {
         returnedBlog.user = user
         setBlogs(blogs.concat(returnedBlog))
@@ -90,6 +91,27 @@ const App = () => {
     setUser(null)
    
   }
+  const updateBlog = async (changeBlog) => {
+    console.log(changeBlog)
+    const testi = {...changeBlog, user: changeBlog.user.id}
+    
+    try {
+      blogService.update(testi.id, testi)
+      setNotiType("create")
+      setNotification("Updated likes")
+      setTimeout(() => {
+        setNotification(null)
+      }, 4000)
+    } catch(error) {
+      setNotiType("error")
+      setNotification(`Liking is not working because of: ${error}`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 4000)
+    }
+   
+  }
+
 
   
     return (
@@ -114,7 +136,7 @@ const App = () => {
            </Togglable>
         
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         )}
       </div>
 

@@ -34,9 +34,10 @@ blogsRouter.post('/', userExtractor,  async (request, response) => {
         author: body.author,
         url: body.url,
         likes: body.likes ? body.likes : 0,
-        user: user._id
+        user: user._id,
        
     })
+    
     
 // Tallennetaan
    const savedBlog = await blog.save()
@@ -45,6 +46,7 @@ blogsRouter.post('/', userExtractor,  async (request, response) => {
 
    
    // Uusi blogi (sen id) lisätään käyttäjän jo olemassaoleviin blogeihin
+   
    user.blogs = user.blogs.concat(savedBlog._id)
 
    //console.log(user)
@@ -79,21 +81,16 @@ blogsRouter.get('/:id', async (request, response) => {
     response.status(204).end()
   })
   
-  blogsRouter.put('/:id', (request, response, next) => {
-    const body = request.body
-  
-    const blog = {
-        title: body.title,
-        author: body.author,
-        url: body.url,
-        likes: body.likes 
-    }
-  
-    Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-    .then(updateBlog => {
-      response.json(updateBlog)
-    })
-    .catch(error => next(error))
+  blogsRouter.put('/:id', async (request, response, next) => {
+    
+  try {
+    const blog = await Blog.findByIdAndUpdate(request.params.id, request.body, {
+      new: true,
+    }).exec()
+    response.json(blog)
+  } catch (error) {
+    next(error)
+  }
 })
 
 

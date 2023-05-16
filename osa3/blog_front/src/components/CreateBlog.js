@@ -30,6 +30,8 @@ const CreateBlog = ({createBlog}) => {
         })
     }
 
+  
+
     const handleBlogChange = (event) => {
         setNewblog({
             ...newblog, [event.target.name]: event.target.value
