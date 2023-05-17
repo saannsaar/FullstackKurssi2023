@@ -6,9 +6,9 @@ const LoginForm = (props) => {
       <h2>Login</h2>
 
       <form onSubmit={props.handleSubmit}>
-        <p>Username: <input value={props.username} onChange={props.handleUsernameChange}/></p>
-        <p>Password: <input value={props.password} onChange={props.handlePasswordChange}/></p>
-        <button type="submit">Login</button>
+        <p>Username: <input id='username' value={props.username} onChange={props.handleUsernameChange}/></p>
+        <p>Password: <input id='password' value={props.password} onChange={props.handlePasswordChange}/></p>
+        <button id='login-button' type="submit">Login</button>
       </form>
     </div>
   )
