@@ -112,6 +112,28 @@ const App = () => {
    
   }
 
+  const handleDelete = async (deletethisBlog) => {
+    if (window.confirm(`Are you sure you want to remove ${deletethisBlog.title}?`)) {
+      try {
+        await blogService.remove(deletethisBlog.id)
+        if (blogs.indexOf(deletethisBlog)) {
+          blogs.splice(blogs.indexOf(deletethisBlog), 1)
+        }
+        setNotiType("create")
+        setNotification("Blog deleted succesfully!")
+        setTimeout(() => {
+          setNotification(null)
+        }, 4000)
+      } catch(error) {
+        setNotiType("delete")
+        setNotification("Could not delete the blog because of " + error)
+        setTimeout(() => {
+          setNotification(null)
+        },4000)
+      }
+    }
+  }
+
 
   
     return (
@@ -136,7 +158,7 @@ const App = () => {
            </Togglable>
         
         {blogs.sort((a,b) => a.likes - b.likes).map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={handleDelete} />
         )}
       </div>
 
