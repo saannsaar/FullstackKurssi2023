@@ -12,4 +12,9 @@ const createNew = async (content) => {
     return response.data
   }
 
-export default { getAll, createNew }
+  const update = async (anecdote) => {
+    const add = baseUrl.concat('/').concat(anecdote.id)
+    const response = await axios.put(add, anecdote)
+    return response.data
+  }
+export default { getAll, createNew, update }
