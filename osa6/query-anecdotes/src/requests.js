@@ -14,3 +14,9 @@ export const createAnecdote = async (content) =>
     return response.data
 }
    
+export const voteAnecdote = async (votedA) => {
+    const url = baseUrl.concat('/').concat(votedA.id)
+    const response = await axios.put(url, votedA)
+    console.log(response.data)
+    return response.data
+}

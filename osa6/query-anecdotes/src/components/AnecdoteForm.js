@@ -3,10 +3,13 @@ import {  createAnecdote } from "../requests"
 
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
+  // Ensin luetaan "queryClient"-olion avulla "anecdotes"-kyselyn tila ja päivitetään
+// lisäämällä mukaan uusi anekdootti joka saadaan takaisinkutsufuntion parametrina
+// koska muuten sovellus tekee POST pyynnön jälkeen uuden GET pyynnön vähän turhaan
   const newAnecdoteMutation = useMutation(createAnecdote, {
-    onSuccess: () => {
-      // Päivittää automaattisesti kyselyn jonka avain on "anecdotes", eli hakee anekdootit uudestaan
-      queryClient.invalidateQueries('anecdotes')
+    onSuccess: (newAnecdote) => {
+      const anecdotes = queryClient.getQueryData('anecdotes')
+      queryClient.setQueryData('anecdotes', anecdotes.concat(newAnecdote))
     }
   })
 
