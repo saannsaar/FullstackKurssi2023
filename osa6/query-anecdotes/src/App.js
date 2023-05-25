@@ -3,9 +3,11 @@ import Notification from './components/Notification'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import axios from 'axios'
 import { getAnecdotes, voteAnecdote } from './requests'
+import { useNotificationDispatch } from './NotificationContext'
 
 const App = () => {
 const queryClient = useQueryClient()
+const dispatch = useNotificationDispatch()
 
 // Luetaan "queryClient"-olion avulla "anecdotes"-kyselyn tila ja päivitetään
 // etsimällä äänestetty anekdootti id:n perusteella ja muutetaan vain sitä pyynnössä
@@ -14,6 +16,10 @@ const queryClient = useQueryClient()
     onSuccess: (votedA) => {
       const anecdotes = queryClient.getQueryData('anecdotes')
       queryClient.setQueryData('anecdotes', anecdotes.map(anecdote => anecdote.id === votedA.id ? votedA : anecdote))
+      dispatch({
+        type: 'NEW_NOTIFICATION',
+        payload: `Anecdote ${votedA.content} voted!`
+      })
     }
   })
 

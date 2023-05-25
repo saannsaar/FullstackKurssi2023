@@ -1,15 +1,28 @@
 import {  useMutation, useQueryClient } from "react-query"
 import {  createAnecdote } from "../requests"
+import { useNotificationDispatch } from "../NotificationContext"
 
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
+  const dispatch = useNotificationDispatch()
   // Ensin luetaan "queryClient"-olion avulla "anecdotes"-kyselyn tila ja päivitetään
 // lisäämällä mukaan uusi anekdootti joka saadaan takaisinkutsufuntion parametrina
 // koska muuten sovellus tekee POST pyynnön jälkeen uuden GET pyynnön vähän turhaan
   const newAnecdoteMutation = useMutation(createAnecdote, {
+
     onSuccess: (newAnecdote) => {
       const anecdotes = queryClient.getQueryData('anecdotes')
       queryClient.setQueryData('anecdotes', anecdotes.concat(newAnecdote))
+      dispatch({
+        type: 'NEW_NOTIFICATION',
+        payload: `New anecdote ${newAnecdote.content} succesfully added!`
+      })
+    },
+    onError: (error) => {
+      dispatch({
+        type: 'NEW_NOTIFICATION',
+        payload: `ERROR: ${error.response.data.error}`
+      })
     }
   })
 
