@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link, useParams, useMatch, useNavigate } from 'react-router-dom'
-
+import { useField } from './hooks'
 
 
 const AnecdoteList = ({ anecdotes }) => (
@@ -45,24 +45,27 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
+
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
+
+
   const navigate = useNavigate()
-  console.log(props.addNew)
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+ 
 
 
   const handleSubmit = (e) => {
   
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     navigate('/')
-    props.setNotification(`Succesfully created a new anecdote: ${content}`)
+    props.setNotification(`Succesfully created a new anecdote: ${content.value}`)
     setTimeout(() => {
       props.setNotification("")
     },4000)
@@ -74,15 +77,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input name='content' {...content} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name='author' {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input name='info'{...info} />
         </div>
         <button>create</button>
       </form>
@@ -131,9 +134,17 @@ const App = () => {
   }
   const notistyle = {
     padding: 15,
+    margin: 20,
     border: 'solid',
     borderColor: 'red'
 
+  }
+
+  const navistyle = {
+    padding: 8,
+    margin: 5,
+    border: 'solid',
+    borderColor: 'pink'
   }
 
   const match = useMatch('/anecdotes/:id')
@@ -145,9 +156,9 @@ const App = () => {
     
       <div>{notification ? <div style={notistyle}>{notification}</div> : <div></div>}</div>
       <div >
-        <Link  to="/">anecdotes</Link>
-        <Link  to="/create">create</Link>
-        <Link to="/about">about</Link>
+        <Link style={navistyle} to="/">anecdotes</Link>
+        <Link style={navistyle} to="/create">create</Link>
+        <Link style={navistyle} to="/about">about</Link>
       </div>
 
       <Routes>
