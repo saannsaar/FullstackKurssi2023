@@ -46,18 +46,19 @@ const Footer = () => (
 
 const CreateNew = (props) => {
 
-  const content = useField('text')
-  const author = useField('text')
-  const info = useField('text')
+  // Jätetään reset pois, koska muuten saadaan varoitus konsoliin
+  const {reset: resetcontent, ...content} = useField('text')
+  const {reset: resetauthor, ...author} = useField('text')
+  const {reset: resetinfo, ...info} = useField('text')
 
 
   const navigate = useNavigate()
  
 const resetForm = (e) => {
   e.preventDefault()
-  content.reset()
-  author.reset()
-  info.reset()
+  resetcontent()
+  resetauthor()
+  resetinfo()
 
   
 }
