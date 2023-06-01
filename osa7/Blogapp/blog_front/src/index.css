@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#blogsdiv>div {
+  margin-bottom: 15px;
+  background-color: rgb(210, 184, 184);
+  list-style: none;
+  padding-left: 5px;
+}
+
+input[type=text] {
+  width:100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid rgb(241, 199, 241);
+  box-sizing: border-box;
+}
+input[type=password] {
+  width:100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid rgb(241, 199, 241);
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 50%;
+  background-color: #fe85db;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #ad6499;
+}
+
+#formdiv {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  width: 40vw;
+}
+
+#container1 {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  padding: 10px;
+}
+
+#blogsdiv {
+  width: 40vw;
+  padding-left: 10px;
+}
+
+.blogi {
+   margin: 8px;
+   background-color: #ad6499;
+   border: #ce93be 2px solid;
+}
+
+#loginformi {
+  background-color: #ce93be;
+  padding: 20px;
+  margin: 20px;
+}
+
+h3 {
+  color: rgb(160, 230, 228)
+}
