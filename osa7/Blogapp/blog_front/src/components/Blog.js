@@ -2,17 +2,17 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/NotiReducer'
+import { likeOf } from '../reducers/blogsReducer'
 
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, deleteBlog }) => {
   const dispatch = useDispatch()
   console.log(blog)
 
   const [showMoreInfo, setShowMoreInfo] = useState(false)
 
   const handleLike = () => {
-    blog.likes = blog.likes +1
-    updateBlog(blog)
+    dispatch(likeOf(blog))
     dispatch(setNotification({ noti: 'Blog liked!!', notiType: 'create' }))
   }
   const handleDelete = () => {

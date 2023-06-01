@@ -72,6 +72,8 @@ blogsRouter.get('/:id', async (request, response) => {
     const findBlog = await Blog.findById(request.params.id)
     console.log(findBlog.id)
     const user = request.user
+    console.log(user.id)
+    console.log(findBlog.user)
     if (!user || findBlog.user !== user.id) {
       return response.status(401).json({error: "You cant do that!"})
     }

@@ -1,7 +1,10 @@
 import { useState } from 'react'
 
 
-const CreateBlog = ({ createBlog }) => {
+
+const CreateBlogForm = ( { createNewBlog } ) => {
+
+  console.log(createNewBlog)
   const [newblog, setNewblog] = useState({
     title: '',
     author: '',
@@ -19,7 +22,8 @@ const CreateBlog = ({ createBlog }) => {
       author: newblog.author,
       url: newblog.url,
     }
-    createBlog(newblogObject)
+    console.log(newblogObject)
+    createNewBlog(newblogObject)
 
     setNewblog({
       title: '',
@@ -51,4 +55,4 @@ const CreateBlog = ({ createBlog }) => {
   )
 }
 
-export default CreateBlog
+export default CreateBlogForm

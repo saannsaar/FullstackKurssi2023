@@ -1,23 +1,31 @@
 import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import CreateBlog from './components/CreateBlog'
+import CreateBlogForm from './components/CreateBlog'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Tobblable'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/NotiReducer'
+import { createBlog, initializeBlogs, removeBlog } from './reducers/blogsReducer'
+
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const dispatch = useDispatch()
+  const blogs = useSelector(state => state.blogs)
+  // const users = useSelector(state => state.users)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const dispatch = useDispatch()
+
 
 
   const blogFormRef = useRef()
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -25,9 +33,7 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
+
     }
   }, [])
 
@@ -55,21 +61,6 @@ const App = () => {
     }
   }
 
-  const createNewBlog = (newblogObject) => {
-
-
-    blogFormRef.current.toggleVisibility()
-    console.log(newblogObject)
-    blogService.create(newblogObject).then(returnedBlog => {
-      returnedBlog.user = user
-      setBlogs(blogs.concat(returnedBlog))
-      dispatch(setNotification({ noti: 'Created!', notiType: 'create' }))
-    }).catch(error => {
-      dispatch(setNotification({ noti: `Blog creation failed because of: " ${error}`, notiType: 'error' }))
-
-    })
-
-  }
 
   const handleLogout = (event) => {
     event.preventDefault()
@@ -90,13 +81,27 @@ const App = () => {
 
   }
 
+  const createNewBlog = (newblogObject) => {
+
+    console.log('HALOO')
+    blogFormRef.current.toggleVisibility()
+    console.log(newblogObject)
+    try {
+      dispatch(createBlog(newblogObject))
+      console.log(blogs)
+      dispatch(setNotification({ noti: 'Created!', notiType: 'create' }))
+    } catch (error) {
+      dispatch(setNotification({ noti: `Blog creation failed because of: " ${error}`, notiType: 'error' }))
+
+    }
+
+  }
+
   const handleDelete = async (deletethisBlog) => {
     if (window.confirm(`Are you sure you want to remove ${deletethisBlog.title}?`)) {
       try {
-        await blogService.remove(deletethisBlog.id)
-        if (blogs.indexOf(deletethisBlog)) {
-          blogs.splice(blogs.indexOf(deletethisBlog), 1)
-        }
+        console.log(deletethisBlog)
+        dispatch(removeBlog(deletethisBlog.id))
         dispatch(setNotification({ noti: 'Blog deleted!', notiType: 'create' }))
       } catch(error) {
         dispatch(setNotification({ noti: `You cant do that: ${error}`, notiType: 'error' }))
@@ -124,10 +129,10 @@ const App = () => {
         <div>
           <h1>Logged in as {user.username} <button onClick={handleLogout}>Log out</button></h1>
           <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-            <CreateBlog createBlog={createNewBlog}/>
+            <CreateBlogForm createNewBlog={createNewBlog}/>
           </Togglable>
 
-          {blogs.sort((a,b) => a.likes - b.likes).map(blog =>
+          {blogs.slice().sort((a,b) => a.likes - b.likes).map(blog =>
             <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={handleDelete} />
           )}
         </div>
