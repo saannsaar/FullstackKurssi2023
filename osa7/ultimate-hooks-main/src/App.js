@@ -24,15 +24,22 @@ const useResource = (baseUrl) => {
     console.log(resources)
   }
 
+  useEffect(() => {
+    getAll()
+  }, [])
 
-  const create = (resource) => {
-    // ...
+  const create = async (resource) => {
+    const response = await axios.post(baseUrl, resource)
+    // Kutsutaan getAll() jotta päivittyy lisättykin fronttiin
+    getAll()
   }
-
+  
   const service = {
     create
   }
 
+  // Palauttaa taulukon jonka ensimmäinen alkio sisältää resurssin kaikki oliot
+  // ja toinen alkio on olio jonka avulla resurssia voi manipuloida eli lisätä uusia tässä tapauksessa
   return [
     resources, service
   ]
