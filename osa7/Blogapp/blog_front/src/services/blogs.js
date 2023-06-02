@@ -22,11 +22,11 @@ const create = async newObject => {
 
 
 const update = async ( newObject) => {
-  console.log(newObject)
+  console.log(newObject.id)
   const config = {
     headers: { Authorization: token },
   }
-  const address = baseUrl.concat('/').concat(newObject.id)
+  const address = baseUrl.concat('/').concat(newObject.id.trim())
 
   const response = await axios.put(address, newObject, config)
   return response.data

@@ -1,38 +1,45 @@
 
-import { useState } from 'react'
+
 import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/NotiReducer'
 import { likeOf } from '../reducers/blogsReducer'
+import { useNavigate, useParams } from 'react-router-dom'
+import { removeBlog } from '../reducers/blogsReducer'
 
-
-const Blog = ({ blog, deleteBlog }) => {
-  const dispatch = useDispatch()
+const Blog = ({ blogs }) => {
+  const navigate = useNavigate()
+  const id = useParams().id
+  const blog = blogs.find(blog => blog.id === id)
   console.log(blog)
+  const dispatch = useDispatch()
 
-  const [showMoreInfo, setShowMoreInfo] = useState(false)
+
+
 
   const handleLike = () => {
-    dispatch(likeOf(blog))
+    const testi = { ...blog, user: blog.user.id }
+    dispatch(likeOf(testi))
     dispatch(setNotification({ noti: 'Blog liked!!', notiType: 'create' }))
   }
-  const handleDelete = () => {
-    deleteBlog(blog)
+
+  const handleDelete = async () => {
+    if (window.confirm(`Are you sure you want to remove ${blog.title}?`)) {
+      try {
+        console.log(blog)
+        dispatch(removeBlog(blog.id))
+        navigate('/')
+        dispatch(setNotification({ noti: 'Blog deleted!', notiType: 'create' }))
+      } catch(error) {
+        dispatch(setNotification({ noti: `You cant do that: ${error}`, notiType: 'error' }))
+      }
+    }
   }
 
 
 
-
-  if (!showMoreInfo) {
-    return (
-      <div className="blogi">
-        <h3>{blog.title}, by {blog.author} <button onClick={() => setShowMoreInfo(true)}>Show</button></h3>
-
-      </div>
-    )
-  }
   return (
     <div className="blogi">
-      <h3>{blog.title}, by {blog.author} <button onClick={() => setShowMoreInfo(false)}>Hide</button></h3>
+      <h3>{blog.title} </h3>
       <p><strong>Author: </strong> {blog.author} </p>
       <p><strong>URL: </strong> {blog.url} </p>
       <p> <strong>This blog has: </strong> {blog.likes} <strong> likes!</strong>

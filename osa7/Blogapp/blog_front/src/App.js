@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
+import Users from './components/Users'
 import Blog from './components/Blog'
+import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import CreateBlogForm from './components/CreateBlog'
 import loginService from './services/login'
@@ -8,13 +10,16 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Tobblable'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/NotiReducer'
-import { createBlog, initializeBlogs, removeBlog } from './reducers/blogsReducer'
+import { createBlog, initializeBlogs } from './reducers/blogsReducer'
+import { initializeUsers } from './reducers/usersReducer'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
-  // const users = useSelector(state => state.users)
+  const users = useSelector(state => state.users)
+  console.log(users)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -25,6 +30,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [dispatch])
 
   useEffect(() => {
@@ -68,18 +74,6 @@ const App = () => {
     setUser(null)
 
   }
-  const updateBlog = async (changeBlog) => {
-    console.log(changeBlog)
-    const testi = { ...changeBlog, user: changeBlog.user.id }
-
-    try {
-      blogService.update(testi.id, testi)
-      dispatch(setNotification({ noti: 'Logged out!', notiType: 'create' }))
-    } catch(error) {
-      dispatch(setNotification({ noti: `Blog creation failed because of: " ${error}`, notiType: 'error' }))
-    }
-
-  }
 
   const createNewBlog = (newblogObject) => {
 
@@ -95,18 +89,6 @@ const App = () => {
 
     }
 
-  }
-
-  const handleDelete = async (deletethisBlog) => {
-    if (window.confirm(`Are you sure you want to remove ${deletethisBlog.title}?`)) {
-      try {
-        console.log(deletethisBlog)
-        dispatch(removeBlog(deletethisBlog.id))
-        dispatch(setNotification({ noti: 'Blog deleted!', notiType: 'create' }))
-      } catch(error) {
-        dispatch(setNotification({ noti: `You cant do that: ${error}`, notiType: 'error' }))
-      }
-    }
   }
 
 
@@ -127,14 +109,23 @@ const App = () => {
       {
         user &&
         <div>
-          <h1>Logged in as {user.username} <button onClick={handleLogout}>Log out</button></h1>
-          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-            <CreateBlogForm createNewBlog={createNewBlog}/>
-          </Togglable>
+          <Router>
+            <div>
+              <Link to="/">BLOGS</Link>
+              <Link to="users">USERS</Link>
+            </div>
+            <h1>Logged in as {user.username} <button onClick={handleLogout}>Log out</button></h1>
+            <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+              <CreateBlogForm createNewBlog={createNewBlog}/>
+            </Togglable>
 
-          {blogs.slice().sort((a,b) => a.likes - b.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={handleDelete} />
-          )}
+            <Routes>
+              <Route path="/users" element={<Users users={users}/>}/>
+              <Route path="/" element={<Blogs blogs={blogs} user={user}/>}/>
+              <Route path="/blogs/:id" element={<Blog blogs={blogs} user={user}  />}/>
+            </Routes>
+          </Router>
+
         </div>
 
       }
