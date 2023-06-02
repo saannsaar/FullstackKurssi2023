@@ -44,5 +44,12 @@ const remove = async (id) => {
   return response.data
 }
 
+const comment = async (blogid, comment) => {
 
-export default { getAll, create, update, setToken, remove }
+  const address = baseUrl.concat('/').concat(blogid).concat('/comments')
+  console.log(address)
+  const response = await axios.post(address, comment)
+  return response.data
+}
+
+export default { getAll, create, update, setToken, remove, comment }

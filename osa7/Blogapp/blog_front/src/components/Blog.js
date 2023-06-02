@@ -5,6 +5,9 @@ import { setNotification } from '../reducers/NotiReducer'
 import { likeOf } from '../reducers/blogsReducer'
 import { useNavigate, useParams } from 'react-router-dom'
 import { removeBlog } from '../reducers/blogsReducer'
+import { useState } from 'react'
+import Comment from './Comment'
+import { commentBlog } from '../reducers/blogsReducer'
 
 const Blog = ({ blogs }) => {
   const navigate = useNavigate()
@@ -12,6 +15,7 @@ const Blog = ({ blogs }) => {
   const blog = blogs.find(blog => blog.id === id)
   console.log(blog)
   const dispatch = useDispatch()
+  const [comment, setComment] = useState('')
 
 
 
@@ -22,6 +26,14 @@ const Blog = ({ blogs }) => {
     dispatch(setNotification({ noti: 'Blog liked!!', notiType: 'create' }))
   }
 
+  const handleComment = (e) => {
+    e.preventDefault()
+
+    console.log(comment)
+
+    dispatch(commentBlog(blog.id, comment))
+    setComment('')
+  }
   const handleDelete = async () => {
     if (window.confirm(`Are you sure you want to remove ${blog.title}?`)) {
       try {
@@ -36,6 +48,10 @@ const Blog = ({ blogs }) => {
   }
 
 
+  const handleChangeC = (e) => {
+    setComment(e.target.value)
+    console.log(comment)
+  }
 
   return (
     <div className="blogi">
@@ -44,7 +60,14 @@ const Blog = ({ blogs }) => {
       <p><strong>URL: </strong> {blog.url} </p>
       <p> <strong>This blog has: </strong> {blog.likes} <strong> likes!</strong>
         <button className="like" onClick={handleLike}>Like</button></p>
-      <p>{blog.user.username}</p>
+      <p>Added by: {blog.user.username}</p>
+      <form onSubmit={handleComment}>
+        <input type="text" value={comment} onChange={handleChangeC}/>
+        <button type="submit">comment</button>
+      </form>
+      <h4>Comments:</h4>
+      <Comment comments={blog.comments} />
+
       <button onClick={handleDelete}>Remove</button>
     </div>
 

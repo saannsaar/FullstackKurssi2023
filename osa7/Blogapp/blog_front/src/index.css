@@ -77,5 +77,11 @@ input[type=submit]:hover {
 }
 
 h3 {
-  color: rgb(160, 230, 228)
+  color: rgb(160, 230, 228);
+  margin: 10px;
 }
+
+h1, h2, li, button {
+  margin: 10px;
+}
+

@@ -12,6 +12,7 @@ const loginRouter = require('./controllers/login')
 
 
 
+
 if (process.env.NODE_ENV === 'test') {
   console.log("TESTI")
   const testingRouter = require('./controllers/testing')
@@ -20,6 +21,7 @@ if (process.env.NODE_ENV === 'test') {
 
 
 const middleware = require('./utils/middleware')
+
 mongoose.set('strictQuery', false)
 
 logger.info('connecting to', config.MONGODB_URI)

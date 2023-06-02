@@ -1,10 +1,8 @@
 const blogsRouter = require('express').Router()
-
+const mongoose = require('mongoose')
 
 const Blog = require('../models/blog')
 const {userExtractor } = require('../utils/middleware')
-
-
 
 
 // Haetaan kaikki blogit
@@ -19,23 +17,23 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', userExtractor,  async (request, response) => {
     const body = request.body
 
-   console.log(body)
+    console.log(body)
     const user = request.user
     console.log(user)
     if (!user) {
       return response.status(401).json({error: "You cant do that"})
     }
 
+    if (!body.comments) body.comments = []
     
     // Luodaan uusi blogi
     const blog = new Blog({
-
         title: body.title,
         author: body.author,
         url: body.url,
         likes: body.likes ? body.likes : 0,
         user: user._id,
-       
+        comments: body.comments,
     })
     
     
@@ -43,7 +41,6 @@ blogsRouter.post('/', userExtractor,  async (request, response) => {
    const savedBlog = await blog.save()
     // console.log(user.blogs)
     // console.log(savedBlog._id)
-
    
    // Uusi blogi (sen id) lisätään käyttäjän jo olemassaoleviin blogeihin
    
@@ -77,7 +74,7 @@ blogsRouter.get('/:id', async (request, response) => {
     if (!user || findBlog.user !== user.id) {
       return response.status(401).json({error: "You cant do that!"})
     }
- 
+    
     user.blogs = user.blogs.filter(blog => blog !== findBlog.id)
     await user.save()
     await findBlog.remove()
@@ -95,6 +92,22 @@ blogsRouter.get('/:id', async (request, response) => {
     next(error)
   }
 })
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  console.log("Kommenttilisäys")
+  const blog = await Blog.findById(request.params.id)
+  console.log(request.body.comment)
+  blog.comments.push({
+    comment: request.body.comment,
+  })
+
+  const commentedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+    new: true,
+  }).exec()
+
+  response.status(200).json(commentedBlog)
+})
+
 
 
 module.exports = blogsRouter

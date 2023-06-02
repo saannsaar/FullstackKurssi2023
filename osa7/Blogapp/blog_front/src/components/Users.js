@@ -1,21 +1,23 @@
+import { Link } from 'react-router-dom'
 
-
+// Komponentti html tablen luomiseen johon näytetään tietokannassa olevat käyttäjät ja niiden luomat blogit
 const Users = (users) => {
   console.log(users)
+  console.log(users.users)
   return (
-    <table>
+    <><h1>USERS</h1><table>
       <tr>
-        <th>Name</th>
+        <th>Username</th>
         <th>Blogs created</th>
       </tr>
-      {users.map(user =>
-        // eslint-disable-next-line react/jsx-key
+      {users.users.map(user =>
+      // eslint-disable-next-line react/jsx-key
         <tr>
-          <td>{user.username}</td>
+          <Link to={`/users/${user.id}`}>{user.username}</Link>
           <td>{user.blogs.length}</td>
         </tr>
       )}
-    </table>
+    </table></>
 
   )
 }

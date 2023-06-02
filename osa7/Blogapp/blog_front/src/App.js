@@ -13,6 +13,7 @@ import { setNotification } from './reducers/NotiReducer'
 import { createBlog, initializeBlogs } from './reducers/blogsReducer'
 import { initializeUsers } from './reducers/usersReducer'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import User from './components/User'
 
 
 const App = () => {
@@ -95,26 +96,26 @@ const App = () => {
 
   return (
     <div>
-      <h1>Blogs app</h1>
       <Notification />
       {
         !user &&
-        <Togglable buttonLabel="log in">
-          <LoginForm username={username} password={password}  handleUsernameChange={({ target }) => setUsername(target.value)}
+        <><h1>BLOG APP</h1><Togglable buttonLabel="log in">
+          <LoginForm username={username} password={password} handleUsernameChange={({ target }) => setUsername(target.value)}
             handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}/>
-        </Togglable>
+            handleSubmit={handleLogin} />
+        </Togglable></>
 
       }
       {
         user &&
         <div>
           <Router>
-            <div>
-              <Link to="/">BLOGS</Link>
-              <Link to="users">USERS</Link>
+            <div id="navibar">
+              <p><Link to="/">BLOGS</Link></p>
+              <p><Link to="users">USERS</Link></p>
+              <p> Logged in as {user.username} <button onClick={handleLogout}>Log out</button> </p>
             </div>
-            <h1>Logged in as {user.username} <button onClick={handleLogout}>Log out</button></h1>
+            <h1>BLOG APP</h1>
             <Togglable buttonLabel="create new blog" ref={blogFormRef}>
               <CreateBlogForm createNewBlog={createNewBlog}/>
             </Togglable>
@@ -122,7 +123,8 @@ const App = () => {
             <Routes>
               <Route path="/users" element={<Users users={users}/>}/>
               <Route path="/" element={<Blogs blogs={blogs} user={user}/>}/>
-              <Route path="/blogs/:id" element={<Blog blogs={blogs} user={user}  />}/>
+              <Route path="/blogs/:id" element={<Blog blogs={blogs}  />}/>
+              <Route path="/users/:id" element={<User users={users}  />}/>
             </Routes>
           </Router>
 
