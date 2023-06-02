@@ -14,7 +14,7 @@ import { createBlog, initializeBlogs } from './reducers/blogsReducer'
 import { initializeUsers } from './reducers/usersReducer'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import User from './components/User'
-
+import { Container } from '@mui/material'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -95,19 +95,20 @@ const App = () => {
 
 
   return (
-    <div>
-      <Notification />
-      {
-        !user &&
+    <Container>
+      <div>
+        <Notification />
+        {
+          !user &&
         <><h1>BLOG APP</h1><Togglable buttonLabel="log in">
           <LoginForm username={username} password={password} handleUsernameChange={({ target }) => setUsername(target.value)}
             handlePasswordChange={({ target }) => setPassword(target.value)}
             handleSubmit={handleLogin} />
         </Togglable></>
 
-      }
-      {
-        user &&
+        }
+        {
+          user &&
         <div>
           <Router>
             <div id="navibar">
@@ -130,8 +131,9 @@ const App = () => {
 
         </div>
 
-      }
-    </div>
+        }
+      </div>
+    </Container>
 
   )
 
