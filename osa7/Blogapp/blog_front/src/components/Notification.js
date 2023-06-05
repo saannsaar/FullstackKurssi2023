@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-
+import { Alert } from '@mui/material'
 
 const Notification =() => {
 
@@ -11,19 +11,14 @@ const Notification =() => {
     return null
   }
 
-  const style = {
-    color: notification.notiType === 'error' ? 'red' : 'green',
-    background: 'lightgrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 3,
-    padding: 5,
-    marginBottom: 10
-  }
+
 
   return (
-    <div id="notification" style={style}>
-      {notification.noti}
+    <div >
+
+      <Alert severity="success">
+        {notification.noti}
+      </Alert>
     </div>
   )
 

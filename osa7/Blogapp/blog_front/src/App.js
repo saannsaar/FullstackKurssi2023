@@ -14,7 +14,7 @@ import { createBlog, initializeBlogs } from './reducers/blogsReducer'
 import { initializeUsers } from './reducers/usersReducer'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import User from './components/User'
-import { Container } from '@mui/material'
+import { AppBar, Button, Container, Toolbar } from '@mui/material'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -76,6 +76,8 @@ const App = () => {
 
   }
 
+
+
   const createNewBlog = (newblogObject) => {
 
     console.log('HALOO')
@@ -100,23 +102,26 @@ const App = () => {
         <Notification />
         {
           !user &&
-        <><h1>BLOG APP</h1><Togglable buttonLabel="log in">
+        <Togglable buttonLabel="log in">
           <LoginForm username={username} password={password} handleUsernameChange={({ target }) => setUsername(target.value)}
             handlePasswordChange={({ target }) => setPassword(target.value)}
             handleSubmit={handleLogin} />
-        </Togglable></>
+        </Togglable>
 
         }
         {
           user &&
         <div>
           <Router>
-            <div id="navibar">
-              <p><Link to="/">BLOGS</Link></p>
-              <p><Link to="users">USERS</Link></p>
-              <p> Logged in as {user.username} <button onClick={handleLogout}>Log out</button> </p>
-            </div>
             <h1>BLOG APP</h1>
+            <AppBar position='static'>
+              <Toolbar>
+                <Button color="inherit" component={Link} to="/">home</Button>
+                <Button color="inherit" component={Link} to="/users">users</Button>
+                <em>{user.username} logged in</em>
+                <Button variant='outlined' color='inherit' onClick={handleLogout}>logout</Button>
+              </Toolbar>
+            </AppBar>
             <Togglable buttonLabel="create new blog" ref={blogFormRef}>
               <CreateBlogForm createNewBlog={createNewBlog}/>
             </Togglable>

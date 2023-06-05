@@ -1,23 +1,34 @@
 import { Link } from 'react-router-dom'
+import { TableContainer, TableCell, TableBody, TableRow, Table, TableHead } from '@mui/material'
 
-// Komponentti html tablen luomiseen johon näytetään tietokannassa olevat käyttäjät ja niiden luomat blogit
+// Komponentti taulukon luomiseen johon näytetään tietokannassa olevat käyttäjät ja niiden luomat blogit
 const Users = (users) => {
   console.log(users)
   console.log(users.users)
   return (
-    <><h1>USERS</h1><table>
-      <tr>
-        <th>Username</th>
-        <th>Blogs created</th>
-      </tr>
-      {users.users.map(user =>
-      // eslint-disable-next-line react/jsx-key
-        <tr>
-          <Link to={`/users/${user.id}`}>{user.username}</Link>
-          <td>{user.blogs.length}</td>
-        </tr>
-      )}
-    </table></>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Username</TableCell>
+            <TableCell>Blogs created</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users.users.map(user => <TableRow key={user.id}>
+            <TableCell>
+              <Link to={`/users/${user.id}`}>{user.username}</Link>
+            </TableCell>
+            <TableCell>
+              {user.blogs.length}
+            </TableCell>
+
+          </TableRow>
+
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
 
   )
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { TextField, Button } from '@mui/material'
 
 
 
@@ -43,15 +44,22 @@ const CreateBlogForm = ( { createNewBlog } ) => {
   }
 
   return (
-    <form onSubmit={handleCreation}>
+    <><h2>Create a new blog</h2><form onSubmit={handleCreation}>
       <div>
-        <h2>Create a new blog</h2>
-        <p>Title: <input id='title-input' type="text" value={newblog.title} name="title" onChange={handleBlogChange}/></p>
-        <p>Author: <input id='author-input' type="text" value={newblog.author} name="author" onChange={handleBlogChange}/></p>
-        <p>Url: <input id='url-input' type="text" value={newblog.url} name="url" onChange={handleBlogChange}/></p>
+        <TextField type="text" label="Title" name="title" value={newblog.title} onChange={handleBlogChange} />
       </div>
-      <button type="submit">Save</button>
-    </form>
+      <div>
+        <TextField label="Author" type="text" name="author" value={newblog.author} onChange={handleBlogChange} />
+      </div>
+      <div>
+        <TextField label="Url" type="text" name="url" value={newblog.url} onChange={handleBlogChange} />
+      </div>
+      <div>
+        <Button variant="contained" color="primary" type="submit">
+          Save blog
+        </Button>
+      </div>
+    </form></>
   )
 }
 
