@@ -104,6 +104,7 @@ type Author {
   name: String!
   id: ID!
   born: String!
+  bookCount: Int!
 }
 
 type Book {
@@ -131,6 +132,13 @@ const resolvers = {
     bookCount: () => books.length,
     findAuthor: (root, args) => 
       authors.find(a => a.name === args.name)
+  },
+  Author: {
+    bookCount: (root) => {
+      console.log(root)
+      const booksFromAuthor = books.filter(book => book.author === root.name)
+      return booksFromAuthor.length
+    }
   }
 }
 
