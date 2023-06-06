@@ -1,6 +1,5 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
-const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 const Book = require('./models/Book')
@@ -56,58 +55,88 @@ const resolvers = {
   Query: {
     authorCount: async () => Author.collection.countDocuments(),
     allAuthors: async (root, args) => {
-      const result = await Author.fing({})
+      const result = await Author.find({})
       return result
     },
     bookCount: async () => Book.collection.countDocuments(),
     // TODO
-    allBooks: (root, args) => {
+    allBooks: async (root, args) => {
       console.log(args)
+      // If theres no arguments as filters get all the books from db
       if(!args.author && !args.genre) {
-        return books
+        return await Book.find({})
       }
-    if (args.author) {
-      let booksbyAuthor = books.filter(b=> b.author === args.author)
-      if (args.genres) {
-        return booksbyAuthor.filter(b => b.genres.find(g => g === args.genre))
-      }
-      return booksbyAuthor
+      // If there's author and genre given as arguments
+    if (args.author && args.genres) {
+      let booksbyAuthor = Author.findOne({ name: args.author })
+      let booksbyGenre = await Book.find({
+        $and: [
+          {author: booksbyAuthor.id}, {genres: args.genre },
+        ]
+      }).populate('author')
+      
+      return booksbyGenre
     } 
-    if (args.genre) {
-      return books.filter(b => b.genres.find(g => g === args.genre))
+    // If there's author given as an argument
+    if (args.author) {
+      let booksbyAuthor = await Author.find({ name: args.author }) 
+      return await Book.findById(booksbyAuthor.id).populate('author')
     }
-   
+    // If there's genre given as an argument 
+    if (args.genre) {
+      return await Book.find({ genres : args.genre }).populate('author')
+    }
 
-    return books
+    return await Book.find({})
   }
      
   },
   Mutation: {
     addBook: async (root, args) => {
-      const book = new Book({...args})
-      const auhtorIsFound = authors.find(a => a.name === args.author)
+      // Find if the auhtor given as arg. is already in db
+      const auhtorIsFound = await Author.findOne({ name: args.author })
+      // If not add new author also to the db
       if (!auhtorIsFound) {
-        let newAuthor = { name: args.author, id: uuid() }
-        authors.concat(newAuthor)
+        // Create a new author with given argument "author" (id is created automatically)
+        const newAuthor = new Author({ name: args.author})
+        // Save
+       await newAuthor.save()
+       // Create a new book with given arguments for the book 
+       const newBook = new Book({ ...args, author: newAuthor })
+       // Save
+       await newBook.save()
+       return newBook
       }
-      books = books.concat(book)
-      return book
+      // If author is already in db just add new book 
+      const newBook = new Book({ ...args, author: auhtorIsFound })
+      // Save it
+      await newBook.save()
+      return newBook
+
     },
-    editAuthor: (root, args) => {
-      const findAuthor = authors.find(a => a.name.trim().toLowerCase() === args.name.trim().toLowerCase())
+    editAuthor: async  (root, args) => {
+      // First get the right author from db by name given as an argument
+      const findAuthor = await Author.findOne({ name: args.name })
+      // If theres no such author in db return null
       if (!findAuthor) {
         return null
       }
+      // Change the born value in db 
       const updateA = { ...findAuthor, born: args.setBornTo }
-      authors = authors.map(a => a.name === args.name ? updateA : a)
+      // Save the updated Author in db
+      await updateA.save()
       return updateA
     }
   },
   Author: {
-    bookCount: (root) => {
+    bookCount: async (root) => {
       console.log(root)
-      const booksFromAuthor = books.filter(book => book.author === root.name)
-      return booksFromAuthor.length
+      // First get the author
+      const booksFromAuthor = await Author.findOne({ name: root.name })
+      // Then get books that has has a reference to the found author (with id)
+      const allBooks = await Book.find({ author: booksFromAuthor.id })
+      // return the length as in how many books one author has
+      return allBooks.length
     }
   }
 }
