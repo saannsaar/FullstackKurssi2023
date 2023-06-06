@@ -55,8 +55,11 @@ const Authors = (props) => {
   <form onSubmit={submitYear}>
         <div>
           Name: 
-          <input type="text"  value={name}
-            onChange={({ target }) => setFindName(target.value)}/>
+          <select value={name} onChange={ ({ target }) => setFindName(target.value) }>
+            {props.authors.slice().map((a) => (
+              <option value={a.name}>{a.name}</option>
+            ))}
+          </select>
         </div>
         <div>
           Born: 
