@@ -172,7 +172,7 @@ const resolvers = {
       return book
     },
     editAuthor: (root, args) => {
-      const findAuthor = authors.find(a => a.name === args.name)
+      const findAuthor = authors.find(a => a.name.trim().toLowerCase() === args.name.trim().toLowerCase())
       if (!findAuthor) {
         return null
       }
