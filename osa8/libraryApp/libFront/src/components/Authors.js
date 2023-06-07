@@ -20,7 +20,7 @@ const Authors = (props) => {
   event.preventDefault()
 
 
-  console.log(updateYear)
+  console.log(name, setBornTo)
   updateYear({ variables: { name,  setBornTo } })
 
   setFindName('')

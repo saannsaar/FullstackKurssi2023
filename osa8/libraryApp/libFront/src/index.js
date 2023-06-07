@@ -17,6 +17,8 @@ query {
       }
       allBooks {
         title
+        published
+        author { name }
       }
 }
 `

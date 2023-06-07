@@ -46,7 +46,7 @@ type Mutation {
   type Query {
     authorCount: Int!
     allAuthors: [Author!]!
-    allBooks(author: String, genre: String): [Book!]
+    allBooks(author: String, genres: String): [Book!]
     bookCount: Int!
   }
 `
@@ -59,19 +59,22 @@ const resolvers = {
       return result
     },
     bookCount: async () => Book.collection.countDocuments(),
-    // TODO
+    
     allBooks: async (root, args) => {
       console.log(args)
       // If theres no arguments as filters get all the books from db
-      if(!args.author && !args.genre) {
-        return await Book.find({})
+      if(!args.author && !args.genres) {
+        return await Book.find({}).populate('author')
       }
       // If there's author and genre given as arguments
     if (args.author && args.genres) {
-      let booksbyAuthor = Author.findOne({ name: args.author })
+      console.log(args.author)
+      console.log("-------")
+      let booksbyAuthor = await Author.findOne({ name: args.author })
+      console.log(booksbyAuthor._id)
       let booksbyGenre = await Book.find({
         $and: [
-          {author: booksbyAuthor.id}, {genres: args.genre },
+          {author: booksbyAuthor._id}, {genres: args.genres },
         ]
       }).populate('author')
       
@@ -79,12 +82,14 @@ const resolvers = {
     } 
     // If there's author given as an argument
     if (args.author) {
-      let booksbyAuthor = await Author.find({ name: args.author }) 
-      return await Book.findById(booksbyAuthor.id).populate('author')
+      console.log(args.author)
+      let booksbyAuthor = await Author.findOne({ name: args.author }) 
+      console.log(booksbyAuthor._id)
+      return await Book.find({ author: booksbyAuthor._id }).populate('author')
     }
     // If there's genre given as an argument 
-    if (args.genre) {
-      return await Book.find({ genres : args.genre }).populate('author')
+    if (args.genres) {
+      return await Book.find({ genres : args.genres }).populate('author')
     }
 
     return await Book.find({})
@@ -122,10 +127,9 @@ const resolvers = {
         return null
       }
       // Change the born value in db 
-      const updateA = { ...findAuthor, born: args.setBornTo }
+      findAuthor.born = args.setBornTo
       // Save the updated Author in db
-      await updateA.save()
-      return updateA
+      return  await findAuthor.save()
     }
   },
   Author: {

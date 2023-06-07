@@ -14,7 +14,7 @@ const App = () => {
  }
 
  console.log(result.data.allAuthors)
- console.log(books.data.allBooks)
+ console.log(books)
   return (
     <div>
       <Router>
