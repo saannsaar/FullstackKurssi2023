@@ -11,7 +11,7 @@ const Books = (props) => {
 
       <table>
         <tbody>
-          <tr>
+          <tr> 
             <th></th>
             <th>author</th>
             <th>published</th>
@@ -25,6 +25,7 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
+
     </div>
   )
 }
