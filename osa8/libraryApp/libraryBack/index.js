@@ -1,5 +1,7 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { GraphQLError } = require('graphql')
+
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 const Book = require('./models/Book')
@@ -33,6 +35,16 @@ type Book {
   id: ID!
 }
 
+type User {
+  username: String!
+  favouriteGenre: String!
+  id: ID!
+}
+
+type Token {
+  value: String!
+}
+
 type Mutation {
   addBook(
     title: String!
@@ -41,6 +53,8 @@ type Mutation {
     genres: [String!]
   ): Book
   editAuthor(name: String!, setBornTo: Int!): Author
+  createUser(username: String!, favouriteGenre: String!): User
+  login(username: String!, password: String!): Token
 }
 
   type Query {
@@ -48,6 +62,7 @@ type Mutation {
     allAuthors: [Author!]!
     allBooks(author: String, genres: String): [Book!]
     bookCount: Int!
+    me: User
   }
 `
 
@@ -98,28 +113,50 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
+      console.log(root)
+      console.log(args)
       // Find if the auhtor given as arg. is already in db
       const auhtorIsFound = await Author.findOne({ name: args.author })
       // If not add new author also to the db
       if (!auhtorIsFound) {
         // Create a new author with given argument "author" (id is created automatically)
-        const newAuthor = new Author({ name: args.author})
+        const newAuthor = await new Author({ name: args.author})
         // Save
        await newAuthor.save()
        // Create a new book with given arguments for the book 
-       const newBook = new Book({ ...args, author: newAuthor })
-       // Save
-       await newBook.save()
+       const newBook = await new Book({ ...args, author: newAuthor })
+       try {
+        // Save
+          await newBook.save()
+       } catch (error) {
+        console.log(error.message)
+        throw new GraphQLError(error.message, {
+          extensions: {
+            code: 'BAD_USER_INPUT'
+          }
+        })
+       }
        return newBook
+       
       }
       // If author is already in db just add new book 
-      const newBook = new Book({ ...args, author: auhtorIsFound })
-      // Save it
-      await newBook.save()
-      return newBook
+      const newBook = await new Book({ ...args, author: auhtorIsFound })
+      // Save it 
+      try {
+        await newBook.save()
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          }
+        })
+      }
+     
+    
 
     },
     editAuthor: async  (root, args) => {
+    
       // First get the right author from db by name given as an argument
       const findAuthor = await Author.findOne({ name: args.name })
       // If theres no such author in db return null

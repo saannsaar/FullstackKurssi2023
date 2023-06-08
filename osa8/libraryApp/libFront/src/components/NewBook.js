@@ -20,9 +20,16 @@ const NewBook = (props) => {
     console.log('add book...')
     
     let publishedInt = parseInt(published)
+    console.log( title, publishedInt, author, genres )
 
-    createNewBook({ variables: { title, published: publishedInt, author, genres } })
+    if (genres.length === 0) {
+      createNewBook({ variables: { title, published: publishedInt, author } })
+  
+    } else {
+      createNewBook({ variables: { title, published: publishedInt, author, genres } })
 
+    }
+    
     setTitle('')
     setPublished('')
     setAuthor('')
@@ -32,6 +39,7 @@ const NewBook = (props) => {
 
   const addGenre = () => {
     setGenres(genres.concat(genre))
+   console.log(genres)
     setGenre('')
   }
 

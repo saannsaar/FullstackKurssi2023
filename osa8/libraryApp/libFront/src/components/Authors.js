@@ -1,15 +1,25 @@
 import { useState } from "react"
 import { UPDATE_YEAR, ALL_AUTHORS, ALL_BOOKS } from "../queries"
 import { useMutation } from '@apollo/client/react/hooks/useMutation'
+import Select from 'react-select'
 
 const Authors = (props) => {
 
-  const [ name, setFindName ] = useState('')
+  const options = props.authors.slice().map(a => {
+    return { value: a.name, label: a.name }
+  })
+
+
+  
   const [ setBornTo, setNewYear ] = useState('')
+  const [ selectedOpiton, setSelectedOption ] = useState(null)
+
  
   const [ updateYear ] = useMutation(UPDATE_YEAR, {
     refetchQueries: [ { query: ALL_AUTHORS }, { query: ALL_BOOKS }]
   })
+
+  
 
  console.log(props.authors)
  if (!props.authors) {
@@ -20,10 +30,10 @@ const Authors = (props) => {
   event.preventDefault()
 
 
-  console.log(name, setBornTo)
-  updateYear({ variables: { name,  setBornTo } })
+  console.log(selectedOpiton, setBornTo)
+  updateYear({ variables: { name: selectedOpiton.value,  setBornTo } })
 
-  setFindName('')
+  setSelectedOption(null)
   setNewYear('')
 
 }
@@ -55,11 +65,7 @@ const Authors = (props) => {
   <form onSubmit={submitYear}>
         <div>
           Name: 
-          <select value={name} onChange={ ({ target }) => setFindName(target.value) }>
-            {props.authors.slice().map((a) => (
-              <option value={a.name}>{a.name}</option>
-            ))}
-          </select>
+          <Select defaultValue={selectedOpiton} onChange={setSelectedOption} options={options}/>
         </div>
         <div>
           Born: 
