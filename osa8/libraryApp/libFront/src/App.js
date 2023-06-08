@@ -1,13 +1,54 @@
 import { useState } from 'react'
+import { Alert, AppBar, Toolbar, IconButton, Button } from '@mui/material'
 import Authors from './components/Authors'
 import Books from './components/Books'
+import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
-import { useQuery } from '@apollo/client'
+import { useQuery, useApolloClient } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS } from './queries'
+
+
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+
+const Notify = ({errorMessage}) => {
+  if ( !errorMessage ) {
+    return null
+  }
+
+  return (
+   <Alert severity="error">
+    {errorMessage}
+   </Alert>
+  )
+}
 const App = () => {
+
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [token, setToken] = useState(null)
  const result = useQuery(ALL_AUTHORS)
  const books = useQuery(ALL_BOOKS)
+ const client = useApolloClient()
+
+ const logout = () => {
+  setToken(null)
+  localStorage.clear()
+  client.resetStore()
+ }
+ const notify = (message) => {
+  setErrorMessage(message)
+  setTimeout(() => {
+    setErrorMessage(null)
+  }, 5000)
+ }
+ 
+ if (!token) {
+  return (
+    <div>
+      <Notify errorMessage={errorMessage}/>
+      <LoginForm setToken={setToken} setError={notify}/>
+    </div>
+  )
+ }
 
  if (result.loading || books.loading) {
   return <div>Loading...</div>
@@ -17,17 +58,23 @@ const App = () => {
  console.log(books)
   return (
     <div>
+      <Notify errorMessage={errorMessage}/>
       <Router>
-        <div>
-          <Link to="/">Authors</Link>
-          <Link to="/books">Books</Link>
-          <Link to="/add">Add new</Link>
-        </div>
+
+      <AppBar position='static'>
+              <Toolbar>
+                <Button color="inherit" component={Link} to="/">Authors</Button>
+                <Button color="inherit" component={Link} to="/books">Books</Button>
+                <Button color="inherit" component={Link} to="/add">Add new book</Button>
+                <Button color='inherit' component="button" onClick={logout}>logout</Button>
+              </Toolbar>
+            </AppBar>
+       
 
         <Routes>
           <Route path="/" element={<Authors authors={result.data.allAuthors}/>}/>
           <Route path="/books" element={<Books books={books.data.allBooks} />}/>
-          <Route path="/add" element={<NewBook />}/>
+          <Route path="/add" element={<NewBook setError={setErrorMessage}/>}/>
         </Routes>
       </Router>
 
