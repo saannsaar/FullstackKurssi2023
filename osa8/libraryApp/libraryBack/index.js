@@ -110,24 +110,40 @@ const resolvers = {
     }
 
     return await Book.find({})
+  },
+  // Returns logged in user with the third parameter (context)
+  // If the user is not logged in (no valid token in header) returns null
+  me: (root, args, context) => {
+    return context.currentUser
   }
      
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
       console.log(root)
       console.log(args)
+      const currentUser = context.currentUser
+
+      if (!currentUser) {
+        throw new GraphQLError( 'not authenticated to add a new book', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          }
+        })
+      }
       // Find if the auhtor given as arg. is already in db
       const auhtorIsFound = await Author.findOne({ name: args.author })
       // If not add new author also to the db
       if (!auhtorIsFound) {
         // Create a new author with given argument "author" (id is created automatically)
-        const newAuthor = await new Author({ name: args.author})
-        // Save
-       await newAuthor.save()
-       // Create a new book with given arguments for the book 
-       const newBook = await new Book({ ...args, author: newAuthor })
+        
        try {
+        
+          const newAuthor = await new Author({ name: args.author})
+        // Save
+        await newAuthor.save()
+       // Create a new book with given arguments for the book 
+        const newBook = await new Book({ ...args, author: newAuthor })
         // Save
           await newBook.save()
        } catch (error) {
@@ -158,8 +174,17 @@ const resolvers = {
 
     },
 
-    editAuthor: async  (root, args) => {
+    editAuthor: async  (root, args, context) => {
     
+      const currentUser = context.currentUser
+
+      if (!currentUser) {
+        throw new GraphQLError( 'not authenticated to make changes', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+          }
+        })
+      }
       // First get the right author from db by name given as an argument
       const findAuthor = await Author.findOne({ name: args.name })
       // If theres no such author in db return null
@@ -227,6 +252,19 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
   listen: { port: 4000 },
+  // Context does some things to all queries and mutations like identifying the user 
+  // related to the request
+  // Context returns an object which is given to all resolvers as the third parameter
+  context: async ({ req, res }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.startsWith('Bearer ')) {
+      const decodedToken = jwt.verify(
+        auth.substring(7), process.env.JWT_SECRET
+      )
+      const currentUser = await User.findById(decodedToken.id)
+      return { currentUser }
+    }
+  }
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`)
 })
