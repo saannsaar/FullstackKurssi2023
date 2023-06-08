@@ -3,9 +3,11 @@ const { startStandaloneServer } = require('@apollo/server/standalone')
 const { GraphQLError } = require('graphql')
 
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 mongoose.set('strictQuery', false)
 const Book = require('./models/Book')
 const Author = require('./models/Author')
+const User = require('./models/User')
 
 require('dotenv').config()
 const MONGODB_URI = process.env.MONGODB_URI
@@ -155,6 +157,7 @@ const resolvers = {
     
 
     },
+
     editAuthor: async  (root, args) => {
     
       // First get the right author from db by name given as an argument
@@ -167,6 +170,41 @@ const resolvers = {
       findAuthor.born = args.setBornTo
       // Save the updated Author in db
       return  await findAuthor.save()
+    },
+
+    createUser: async (root, args) => {
+      const user = new User({ username: args.username })
+
+      return user.save()
+      .catch(error => {
+        throw new GraphQLError('Creating the user failed', {
+          extensions: {
+            conde: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            error
+          }
+        })
+      })
+    },
+
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+
+      if ( !user || args.password !== 'secret' )
+      {
+        throw new GraphQLError('wrong credentials', {
+          extensions: {
+            code: 'BAD_USER_INPUT'
+          }
+        })
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      }
+
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET )}
     }
   },
   Author: {
