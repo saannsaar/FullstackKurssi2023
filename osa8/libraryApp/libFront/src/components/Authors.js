@@ -5,9 +5,14 @@ import Select from 'react-select'
 
 const Authors = (props) => {
 
+
   const options = props.authors.slice().map(a => {
     return { value: a.name, label: a.name }
   })
+console.log(props.logged)
+  if (props.logged) {
+    console.log("On token")
+  }
 
 
   
@@ -58,8 +63,10 @@ const Authors = (props) => {
         </tbody>
       </table>
 
-<div>
-  <h3>
+
+  {props.token && 
+  <div>
+     <h3>
     Set birthyear
   </h3>
   <form onSubmit={submitYear}>
@@ -74,7 +81,8 @@ const Authors = (props) => {
         </div>
         <button type="submit"> update author </button>
 </form>
-</div>
+</div>}
+ 
     
     </div>
   )

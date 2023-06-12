@@ -40,19 +40,40 @@ const App = () => {
     setErrorMessage(null)
   }, 5000)
  }
- 
+ if (result.loading || books.loading) {
+  return <div>Loading...</div>
+ }
  if (!token) {
+  
   return (
     <div>
+      <Router>
+
+<AppBar position='static'>
+        <Toolbar>
+          <Button color="inherit" component={Link} to="/">Login</Button>
+          <Button color="inherit" component={Link} to="/authors">Authors</Button>
+          <Button color="inherit" component={Link} to="/books">Books</Button>
+        </Toolbar>
+      </AppBar>
       <Notify errorMessage={errorMessage}/>
-      <LoginForm setToken={setToken} setError={notify}/>
+     
+    
+
+  <Routes>
+    <Route path="/" element={ <LoginForm setToken={setToken} setError={notify}/>}/>
+    <Route path="/authors" element={<Authors token={token} authors={result.data.allAuthors}/>}/>
+    <Route path="/books" element={<Books books={books.data.allBooks} />}/>
+  </Routes>
+</Router>
+
+      
+      
     </div>
   )
  }
 
- if (result.loading || books.loading) {
-  return <div>Loading...</div>
- }
+
 
  console.log(result.data.allAuthors)
  console.log(books)
@@ -72,7 +93,7 @@ const App = () => {
        
 
         <Routes>
-          <Route path="/" element={<Authors authors={result.data.allAuthors}/>}/>
+          <Route path="/" element={<Authors token={token} authors={result.data.allAuthors}/>}/>
           <Route path="/books" element={<Books books={books.data.allBooks} />}/>
           <Route path="/add" element={<NewBook setError={setErrorMessage}/>}/>
         </Routes>
