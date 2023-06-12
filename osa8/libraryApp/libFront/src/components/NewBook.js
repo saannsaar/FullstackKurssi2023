@@ -12,6 +12,9 @@ const NewBook = (props) => {
   const [ createNewBook ] = useMutation(ADD_BOOK, { 
     onError: (error) => {
       props.setError(error.graphQLErrors[0].message)
+      setTimeout(() => {
+        props.setError(null)
+      },4000)
     },
     update: (cache, response) => {
       cache.updateQuery({ query: ALL_AUTHORS }, ({ allBooks }) => {
