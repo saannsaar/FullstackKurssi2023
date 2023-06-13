@@ -1,53 +1,73 @@
-import { useQuery } from "@apollo/client"
+import { gql, useApolloClient, useQuery } from "@apollo/client"
 import { useEffect, useState } from "react"
 import { ALL_BOOKS } from "../queries"
 
 const Books = () => {
 
-  const [ genres, setGenres ] = useState({})
+  const [ genres, setGenres ] = useState([])
+  // All books from first query
   const [ books, setBooks ] = useState([])
+  // Use this to filter the books returned from the first query 
+  const [filteredBooks, setFilteredBooks] = useState([])
+  // Filters state
   const [ genreFilter, setGenreFilter ] = useState(null)
+  const client = useApolloClient()
 
-  const bookquery = useQuery(ALL_BOOKS)
-  console.log(bookquery.data.allBooks)
+  const varr = {
+    variables: { genres: genreFilter, },
+  }
+  const bookquery = useQuery(ALL_BOOKS, varr)
+  console.log(bookquery.data)
 
+  
   useEffect(() => {
     console.log("use effectissä")
-    if (!bookquery.data.allBooks) {
-      console.log("ei dataa")
-      return null
+    if (bookquery.data) {
+      
+      setBooks(bookquery.data.allBooks)
+      setFilteredBooks(bookquery.data.allBooks)
+     
+      // flat() makes a new array with all sub-array elements concatenated into it recursively 
+      let genreset = new Set(bookquery.data.allBooks.map((b) => b.genres).flat())
+      genreset = Array.from(genreset)
+      if (genres.length === 0) {
+
+        genreset.push('no filter')
+        setGenres(genreset)
+      }
+     
+    
     }
-    console.log(bookquery)
-    setBooks(bookquery.data.allBooks)
-    console.log(books)
-    // flat() makes a new array with all sub-array elements concatenated into it recursively 
-    let genreset = new Set(bookquery.data.allBooks.map(b => b.genres).flat())
-    genreset = Array.from(genreset)
-    if (genres.length === 0) {
-      let genrearr = []
-      genrearr.push('no filter')
-      setGenres(genrearr)
+   
+   
+   }, [bookquery.data, books, genres.length])
+
+
+   
+   if (bookquery.loading || bookquery.error) {
+    return <div>Loading...</div>
+   }
+ 
+   
+
+  const changeFilter = async (g) => {
+
+    if (g === 'no filter') {
+      setGenreFilter(null)
+      setFilteredBooks(books)
+    } else {
+    console.log("FILTTERISSÄ")
+    setGenreFilter(g)
+    const filterBooks = await client.readQuery({
+      query: ALL_BOOKS,
+      variables: { genreFilter }
+    })
+    setFilteredBooks(filterBooks.allBooks)
+    console.log(filteredBooks)
     }
-    setGenres(genreset)
-   
-    console.log(genres)
-   },[bookquery.data.allBooks, genres.length])
-
-
-   
-
-
-    console.log("MOI")
-    console.log(genres)
-
-
-
-  const changeFilter = async (e) => {
-    setGenreFilter(e.target.value)
-    e.preventDefault()
-    console.log(genreFilter)
+    
+  
  }
-
 
   return (
     <div>
@@ -61,7 +81,7 @@ const Books = () => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books.slice().map((a) => (
+          {filteredBooks.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -72,7 +92,7 @@ const Books = () => {
       </table>
 
     {genres.map((g) => (
-      <button>{g}</button>
+      <button key={g} style={{ margin: '3px'} } onClick={() => changeFilter(g)}>{g}</button>
     ))}
 
     </div>
