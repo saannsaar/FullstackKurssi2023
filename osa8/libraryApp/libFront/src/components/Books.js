@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client"
 import { useEffect, useState } from "react"
-import Select from 'react-select'
 import { ALL_BOOKS } from "../queries"
 
 const Books = () => {
@@ -13,9 +12,9 @@ const Books = () => {
   console.log(bookquery.data.allBooks)
 
   useEffect(() => {
-    console.log("haloo")
+    console.log("use effectissä")
     if (!bookquery.data.allBooks) {
-      console.log("HALOO")
+      console.log("ei dataa")
       return null
     }
     console.log(bookquery)
@@ -23,14 +22,19 @@ const Books = () => {
     console.log(books)
     // flat() makes a new array with all sub-array elements concatenated into it recursively 
     let genreset = new Set(bookquery.data.allBooks.map(b => b.genres).flat())
-    console.log(genreset)
     genreset = Array.from(genreset)
+    if (genres.length === 0) {
+      let genrearr = []
+      genrearr.push('no filter')
+      setGenres(genrearr)
+    }
     setGenres(genreset)
    
     console.log(genres)
-   },[genres, bookquery, books])
+   },[bookquery.data.allBooks, genres.length])
 
-  
+
+   
 
 
     console.log("MOI")
@@ -67,7 +71,9 @@ const Books = () => {
         </tbody>
       </table>
 
-    
+    {genres.map((g) => (
+      <button>{g}</button>
+    ))}
 
     </div>
   )
