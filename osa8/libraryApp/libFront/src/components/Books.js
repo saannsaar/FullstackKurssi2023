@@ -13,7 +13,8 @@ const Books = (props) => {
     genreset = Array.from(genreset)
     setGenres(genreset)
     setBooks(props.books)
-   },[props.books])
+    console.log(genres)
+   },[genres, props.books])
 
   if (!props.books) {
     return null
@@ -31,6 +32,7 @@ const Books = (props) => {
 
 
   const changeFilter = async (e) => {
+    setGenreFilter(e.target.value)
     e.preventDefault()
     console.log(genreFilter)
  }
@@ -40,7 +42,7 @@ const Books = (props) => {
     <div>
       <h2>books</h2>
 
-<Select defaultValue={genreFilter} options={options} onChange={changeFilter} />
+
       <table>
         <tbody>
           <tr> 
@@ -57,6 +59,8 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
+
+      <Select defaultValue={genreFilter} options={options} onChange={changeFilter} />
 
     </div>
   )
