@@ -1,2 +1,3 @@
 # FullStack_kurssi
- FullStack kurssitehtävät
+FullStack dev course
+ React, JavaScript, MongoDB, GraphQL, TypeScript, React Native, CI/CD
