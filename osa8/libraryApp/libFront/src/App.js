@@ -4,6 +4,7 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
+import Recommendation from './components/Recommendation'
 import { useQuery, useApolloClient } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS } from './queries'
 
@@ -87,6 +88,7 @@ const App = () => {
                 <Button color="inherit" component={Link} to="/">Authors</Button>
                 <Button color="inherit" component={Link} to="/books">Books</Button>
                 <Button color="inherit" component={Link} to="/add">Add new book</Button>
+                <Button color="inherit" component={Link} to="/recommendation">Recommendations</Button>
                 <Button color='inherit' component="button" onClick={logout}>logout</Button>
               </Toolbar>
             </AppBar>
@@ -96,6 +98,8 @@ const App = () => {
           <Route path="/" element={<Authors token={token} authors={result.data.allAuthors}/>}/>
           <Route path="/books" element={<Books books={books.data.allBooks} />}/>
           <Route path="/add" element={<NewBook setError={setErrorMessage}/>}/>
+          <Route path="/recommendation" element={<Recommendation books={books.data.allBooks} />}/>
+          
         </Routes>
       </Router>
 
