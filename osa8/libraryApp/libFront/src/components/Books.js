@@ -1,34 +1,41 @@
+import { useQuery } from "@apollo/client"
 import { useEffect, useState } from "react"
 import Select from 'react-select'
+import { ALL_BOOKS } from "../queries"
 
-const Books = (props) => {
+const Books = () => {
 
   const [ genres, setGenres ] = useState({})
   const [ books, setBooks ] = useState([])
   const [ genreFilter, setGenreFilter ] = useState(null)
 
+  const bookquery = useQuery(ALL_BOOKS)
+  console.log(bookquery.data.allBooks)
+
   useEffect(() => {
+    console.log("haloo")
+    if (!bookquery.data.allBooks) {
+      console.log("HALOO")
+      return null
+    }
+    console.log(bookquery)
+    setBooks(bookquery.data.allBooks)
+    console.log(books)
     // flat() makes a new array with all sub-array elements concatenated into it recursively 
-    let genreset = new Set(props.books.map(b => b.genres).flat())
+    let genreset = new Set(bookquery.data.allBooks.map(b => b.genres).flat())
+    console.log(genreset)
     genreset = Array.from(genreset)
     setGenres(genreset)
-    setBooks(props.books)
+   
     console.log(genres)
-   },[genres, props.books])
+   },[genres, bookquery, books])
 
-  if (!props.books) {
-    return null
-  }
+  
 
 
     console.log("MOI")
     console.log(genres)
 
-  const options = genres.map(g => {
-    return { value: g, label: g } 
-  })
-  console.log(options) 
-  
 
 
   const changeFilter = async (e) => {
@@ -60,7 +67,7 @@ const Books = (props) => {
         </tbody>
       </table>
 
-      <Select defaultValue={genreFilter} options={options} onChange={changeFilter} />
+    
 
     </div>
   )

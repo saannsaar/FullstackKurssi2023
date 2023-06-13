@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Alert, AppBar, Toolbar, IconButton, Button } from '@mui/material'
+import { Alert, AppBar, Toolbar, Button } from '@mui/material'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import LoginForm from './components/LoginForm'
@@ -63,7 +63,7 @@ const App = () => {
   <Routes>
     <Route path="/" element={ <LoginForm setToken={setToken} setError={notify}/>}/>
     <Route path="/authors" element={<Authors token={token} authors={result.data.allAuthors}/>}/>
-    <Route path="/books" element={<Books books={books.data.allBooks} />}/>
+    <Route path="/books" element={<Books  />}/>
   </Routes>
 </Router>
 
