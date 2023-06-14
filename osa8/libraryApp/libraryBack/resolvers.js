@@ -74,14 +74,12 @@ const resolvers = {
         // If not add new author also to the db
         if (!auhtorIsFound) {
           // Create a new author with given argument "author" (id is created automatically)
-          
-         try {
-          
-            const newAuthor = await new Author({ name: args.author})
+          const newAuthor = await new Author({ name: args.author})
           // Save
           await newAuthor.save()
          // Create a new book with given arguments for the book 
           const newBook = await new Book({ ...args, author: newAuthor })
+         try {
           // Save
             await newBook.save()
             pubsub.publish('BOOK_ADDED', { bookAdded: newBook })
@@ -92,13 +90,11 @@ const resolvers = {
               code: 'BAD_USER_INPUT'
             }
           })
-         }
-
-        
-         return newBook
          
-        }
-        // If author is already in db just add new book 
+         }
+         return newBook
+        } else {
+          // If author is already in db just add new book 
         const newBook = await new Book({ ...args, author: auhtorIsFound })
         // Save it 
         try {
@@ -111,9 +107,9 @@ const resolvers = {
             }
           })
         }
+        return newBook
+        }
        
-      
-  
       },
   
       editAuthor: async  (root, args, context) => {

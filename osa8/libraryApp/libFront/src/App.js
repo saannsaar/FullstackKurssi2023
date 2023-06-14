@@ -23,6 +23,28 @@ const Notify = ({errorMessage}) => {
    </Alert>
   )
 }
+
+export const updateCache = (cache, query, addedBook) => {
+  // helper that is used to eliminate saving same book twice
+  const uniqByName = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      
+      let k = item.title
+      console.log(k)
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+
+  cache.updateQuery(query, ({ allBooks }) => {
+    console.log(query)
+    return {
+     
+      allBooks: uniqByName(allBooks.concat(addedBook)),
+    }
+  })
+}
+
 const App = () => {
 
   const [errorMessage, setErrorMessage] = useState(null)
@@ -34,9 +56,12 @@ const App = () => {
  useSubscription(BOOK_ADDED, {
   onData: ({ data }) => {
     console.log(data)
-    window.alert(`New book ${data.data.bookAdded.title} by ${data.data.bookAdded.author.name} added! :)`)
+    const addedBook = data.data.bookAdded
+    window.alert(`New book ${addedBook.title} by ${addedBook.author.name} added! :)`)
+    updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
   }
  })
+
  const logout = () => {
   setToken(null)
   localStorage.clear()
