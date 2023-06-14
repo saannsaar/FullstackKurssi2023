@@ -24,26 +24,26 @@ const Notify = ({errorMessage}) => {
   )
 }
 
-export const updateCache = (cache, query, addedBook) => {
-  // helper that is used to eliminate saving same book twice
-  const uniqByName = (a) => {
-    let seen = new Set()
-    return a.filter((item) => {
+// export const updateCache = (cache, query, addedBook) => {
+//   // helper that is used to eliminate saving same book twice
+//   const uniqByName = (a) => {
+//     let seen = new Set()
+//     return a.filter((item) => {
       
-      let k = item.title
-      console.log(k)
-      return seen.has(k) ? false : seen.add(k)
-    })
-  }
+//       let k = item.title
+//       console.log(k)
+//       return seen.has(k) ? false : seen.add(k)
+//     })
+//   }
 
-  cache.updateQuery(query, ({ allBooks }) => {
-    console.log(query)
-    return {
+//   cache.updateQuery(query, ({ allBooks }) => {
+//     console.log(query)
+//     return {
      
-      allBooks: uniqByName(allBooks.concat(addedBook)),
-    }
-  })
-}
+//       allBooks: uniqByName(allBooks.concat(addedBook)),
+//     }
+//   })
+// }
 
 const App = () => {
 
@@ -58,7 +58,11 @@ const App = () => {
     console.log(data)
     const addedBook = data.data.bookAdded
     window.alert(`New book ${addedBook.title} by ${addedBook.author.name} added! :)`)
-    updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
+   client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+    return {
+      allBooks: allBooks.concat(addedBook),
+    }
+   })
   }
  })
 

@@ -16,19 +16,21 @@ const Books = () => {
   const varr = {
     variables: { genres: genreFilter, },
   }
-  const bookquery = useQuery(ALL_BOOKS, varr)
-  console.log(bookquery.data)
+  const { data, refetch, loading, error } = useQuery(ALL_BOOKS, varr)
+  console.log(data)
 
   
   useEffect(() => {
     console.log("use effectissä")
-    if (bookquery.data) {
+    // Refetch incase new book was added
+    refetch()
+    if (data) {
       
-      setBooks(bookquery.data.allBooks)
-      setFilteredBooks(bookquery.data.allBooks)
+      setBooks(data.allBooks)
+      setFilteredBooks(data.allBooks)
      
       // flat() makes a new array with all sub-array elements concatenated into it recursively 
-      let genreset = new Set(bookquery.data.allBooks.map((b) => b.genres).flat())
+      let genreset = new Set(data.allBooks.map((b) => b.genres).flat())
       genreset = Array.from(genreset)
       if (genres.length === 0) {
 
@@ -40,11 +42,11 @@ const Books = () => {
     }
    
    
-   }, [bookquery.data, books, genres.length])
+   }, [data, books, genres.length, refetch])
 
 
    
-   if (bookquery.loading || bookquery.error) {
+   if (loading || error) {
     return <div>Loading...</div>
    }
  
