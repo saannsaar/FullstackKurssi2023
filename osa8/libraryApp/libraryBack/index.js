@@ -17,8 +17,8 @@ const resolvers = require('./resolvers')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 mongoose.set('strictQuery', false)
-const Book = require('./models/Book')
-const Author = require('./models/Author')
+// const Book = require('./models/Book')
+// const Author = require('./models/Author')
 const User = require('./models/User')
 
 require('dotenv').config()
@@ -38,10 +38,10 @@ mongoose.connect(MONGODB_URI)
 
 
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-})
+// const server = new ApolloServer({
+//   typeDefs,
+//   resolvers,
+// })
 
 
 
@@ -75,10 +75,11 @@ const start = async () => {
         return {
           async drainServer() {
             await serverCleanup.dispose()
-          }
-        }
-      }
-    }],
+          },
+        };
+      },
+    },
+  ],
   })
   // GraphQL server must start first so that Express app can start listening to the 
   // specified port, there is an async funcion 
@@ -96,9 +97,7 @@ const start = async () => {
         const auth = req ? req.headers.authorization : null
         if (auth && auth.startsWith('Bearer ')) {
           const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
-          const currentUser = await User.findById(decodedToken.id).populate(
-            'friends'
-          )
+          const currentUser = await User.findById(decodedToken.id)
           return { currentUser }
         }
       },

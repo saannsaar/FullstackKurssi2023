@@ -5,8 +5,9 @@ import Books from './components/Books'
 import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
 import Recommendation from './components/Recommendation'
-import { useQuery, useApolloClient } from '@apollo/client'
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS } from './queries'
+import { BOOK_ADDED } from './queries.js'
 
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
@@ -30,6 +31,12 @@ const App = () => {
  const books = useQuery(ALL_BOOKS)
  const client = useApolloClient()
 
+ useSubscription(BOOK_ADDED, {
+  onData: ({ data }) => {
+    console.log(data)
+    window.alert(`New book ${data.data.bookAdded.title} by ${data.data.bookAdded.author.name} added! :)`)
+  }
+ })
  const logout = () => {
   setToken(null)
   localStorage.clear()

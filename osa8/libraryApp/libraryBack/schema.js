@@ -15,10 +15,6 @@ type Book {
   id: ID!
 }
 
-enum YesNo {
-    YES
-    NO
-}
 
 type User {
   username: String!

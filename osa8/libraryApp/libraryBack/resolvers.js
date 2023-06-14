@@ -84,6 +84,7 @@ const resolvers = {
           const newBook = await new Book({ ...args, author: newAuthor })
           // Save
             await newBook.save()
+            pubsub.publish('BOOK_ADDED', { bookAdded: newBook })
          } catch (error) {
           console.log(error.message)
           throw new GraphQLError(error.message, {
@@ -93,7 +94,7 @@ const resolvers = {
           })
          }
 
-         pubsub.publish('BOOK_ADDED', {bookAdded: newBook})
+        
          return newBook
          
         }
@@ -102,6 +103,7 @@ const resolvers = {
         // Save it 
         try {
           await newBook.save()
+          pubsub.publish('BOOK_ADDED', { bookAdded: newBook })
         } catch (error) {
           throw new GraphQLError(error.message, {
             extensions: {
