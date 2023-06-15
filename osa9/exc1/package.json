@@ -8,6 +8,7 @@
     "multiply": "ts-node multiplier.ts",
     "calculate": "ts-node calculator.ts",
     "bmi": "ts-node bmiCalculator.ts",
+    "training": "ts-node exerciseCalculator.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
