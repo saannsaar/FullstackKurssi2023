@@ -13,7 +13,9 @@ const Part = ({ part }: { part: CoursePart }) => {
                 
             case 'background':
                 return <p style={{ fontStyle:'italic' }}>Submit to: {part.backgroundMaterial}</p>;
-              
+
+            case 'special':
+                return (<div> Requirements:   {part.requirements.map((r) => ( <p  style={{ fontSize: '12px', fontStyle:'italic' }}key={r}>{r}</p>))}</div>)
             default:
                 break;
         }
@@ -22,7 +24,7 @@ const Part = ({ part }: { part: CoursePart }) => {
     return (
         <div>
             <p style={{ fontWeight: 'bold' }}>
-                {part.name}
+                {part.name} {part.exerciseCount}
                 
             </p>
             {renderThis(part)}
