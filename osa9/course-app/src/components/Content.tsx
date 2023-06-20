@@ -1,16 +1,12 @@
+import { CoursePart } from '../types';
+import Part from './Part';
 
 
-interface ContentProps {
-    name: string;
-    exerciseCount: number;
-   }
    
-   const Content = ({ courseParts }: { courseParts: ContentProps[] }): JSX.Element => {
+   const Content = ({ courseParts }: { courseParts: CoursePart[] }): JSX.Element => {
     return (<div>
         {courseParts.slice().map((p) => 
-            (<p key={p.name}>
-                {p.name} {p.exerciseCount}
-            </p>)
+            (<Part key={p.name} part={p} />)
         )}
     </div>)
    };
