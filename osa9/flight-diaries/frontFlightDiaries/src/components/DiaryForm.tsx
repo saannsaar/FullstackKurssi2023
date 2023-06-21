@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import diaryService from '../services/diaryService';
-import { Diary, NewDiary } from "../types";
+import { Diary, NewDiary, Visibility, Weather } from "../types";
 
 interface FormProps {
     setDiaries: Dispatch<SetStateAction<Diary[]>>; 
@@ -9,8 +9,8 @@ interface FormProps {
 const DiaryForm = (props: FormProps) => {
 
     const [date, setDate] = useState('');
-    const [weather, setWeather] = useState('');
-    const [visibility, setVisibility] = useState('');
+    const [weather, setWeather] = useState<Weather>(Weather.Stormy);
+    const [visibility, setVisibility] = useState<Visibility>(Visibility.Poor);
     const [comment, setComment] = useState('');
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -29,8 +29,8 @@ const DiaryForm = (props: FormProps) => {
             props.setDiaries(diariesBefore => [...diariesBefore, response as Diary])
             console.log(response)
             setDate('')
-            setWeather('')
-            setVisibility('')
+            setWeather(Weather.Stormy)
+            setVisibility(Visibility.Poor)
             setComment('')
         }
         catch(error) {
