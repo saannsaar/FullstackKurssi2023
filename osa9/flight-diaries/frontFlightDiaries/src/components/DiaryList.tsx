@@ -15,8 +15,8 @@ const DiaryList = (props: ListProps) => {
         <h2> Diary Entries</h2>
         {
             props.diaries.map((d) => (
-                <div> 
-                     <h3 key={d.id}>{d.date}</h3>
+                <div key={d.id}> 
+                     <h3 >{d.date}</h3>
                     <div>Visibility: {d.visibility}</div>
                     <div>Weather: {d.weather}</div>
                 </div>
