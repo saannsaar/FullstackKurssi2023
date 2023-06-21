@@ -47,10 +47,10 @@ const DiaryForm = (props: FormProps) => {
                     Date <input value={date} onChange={e => setDate(e.target.value)} type="date"/>
                 </div>
                 <div>
-                    Weather <input value={weather} onChange={e => setWeather(e.target.value)} type="text"/>
+                    Weather <input value={weather} onChange={e => setWeather(e.target.value as Weather)} type="text"/>
                 </div>
                 <div>
-                    Visibility <input value={visibility} onChange={e => setVisibility(e.target.value)} type="text"/>
+                    Visibility <input value={visibility} onChange={e => setVisibility(e.target.value as Visibility)} type="text"/>
                 </div>
                 <div>
                     Comment <input value={comment} onChange={e => setComment(e.target.value)} type="text"/>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Diary } from './types';
 import diaryService from '../src/services/diaryService'
 import DiaryForm from './components/DiaryForm';
+import DiaryList from './components/DiaryList';
 
 const App = () => {
   const [diaries, setDiaries] = useState<Diary[]>([]);
@@ -19,12 +20,7 @@ const App = () => {
 
   return (
     <div>
-      Diary Entries
-      <ul>
-        {diaries.map((d) => (
-          <li key={d.id}>{d.date} {d.weather}, {d.visibility}</li>
-        ))}
-      </ul>
+      <DiaryList diaries={diaries} />
       <DiaryForm setDiaries={setDiaries} />
     </div>
   )
