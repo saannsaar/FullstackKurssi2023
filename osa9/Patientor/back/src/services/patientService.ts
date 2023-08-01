@@ -33,10 +33,11 @@ const getOnePatient = ( id: string ): PatientEntry => {
 const addPatient = ( entry: NewPatientEntry ): PatientEntry => {
     
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    const idd = uuid();
+    
     const newPatientEntry = {
-        id: idd,
-        ...entry
+        ...entry,
+        id: uuid()
+        
         
     };
 

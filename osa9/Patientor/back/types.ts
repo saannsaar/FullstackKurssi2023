@@ -21,9 +21,13 @@ export interface PatientEntry {
     entries: Entry[]
 }
 
-export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn' | 'entries'>;
+export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn'>;
+
+export type PublicPatient = Omit<PatientEntry, 'ssn' | 'entries'>;
 
 export type NewPatientEntry = Omit<PatientEntry, 'id'>;
+
+
 
 export enum Gender {
     Female = 'female',
