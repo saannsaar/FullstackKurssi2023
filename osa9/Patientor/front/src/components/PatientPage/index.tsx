@@ -8,6 +8,7 @@ import MaleIcon from '@mui/icons-material/Male';
 import axios from "axios";
 
 import patientService from "../../services/patients";
+import Entries from "./entries";
 
 interface Props {
     patients : Patient[]
@@ -45,28 +46,31 @@ interface Props {
     if (patient) {
         
         return (
-            <div className="App">
-             <Box>
-              <Typography align="left" variant="h5">
-                {patient.name} 
-                {patient.gender === 'female' ? <FemaleIcon></FemaleIcon> :
-           patient.gender === 'male' ? <MaleIcon></MaleIcon> :
-           <PanoramaFishEyeIcon></PanoramaFishEyeIcon>}
-              </Typography>
+            <><div className="App">
+                <Box>
+                    <Typography align="left" variant="h5">
+                        {patient.name}
+                        {patient.gender === 'female' ? <FemaleIcon></FemaleIcon> :
+                            patient.gender === 'male' ? <MaleIcon></MaleIcon> :
+                                <PanoramaFishEyeIcon></PanoramaFishEyeIcon>}
+                    </Typography>
 
-            </Box>
+                </Box>
 
-            <Box>
-                <Typography variant="h6">
-                    Ssh: {patient.ssn}
-                </Typography>
-                <Typography variant="h6">
-                    Occupation: {patient.occupation}
-                </Typography>
-            </Box>
-          
-           
-            </div>
+                <Box>
+                    <Typography variant="h6">
+                        Ssh: {patient.ssn}
+                    </Typography>
+                    <Typography variant="h6">
+                        Occupation: {patient.occupation}
+                    </Typography>
+                </Box>
+
+
+            </div><div>
+                    <Entries patient={patient} entries={patient.entries} />
+                </div></>
+            
           );
     }
     return null;
