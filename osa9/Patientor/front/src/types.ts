@@ -68,4 +68,3 @@ interface BaseEntry {
 
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
-

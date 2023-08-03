@@ -18,8 +18,9 @@ interface Props {
           <TableRow>
             <TableCell>Date</TableCell>
             <TableCell>Description</TableCell>
-            <TableCell>Occupation</TableCell>
+            <TableCell>Specialist</TableCell>
             <TableCell>Diagnosis codes</TableCell>
+            <TableCell>Type of entry</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
