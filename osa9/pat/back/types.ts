@@ -7,10 +7,10 @@ export interface DiagnoseEntry {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export type Entry =
-  | HospitalEntry
-  | OccupationalHealthcareEntry
-  | HealthCheckEntry;
+export type Entry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry;
+export type NewEntry = NewHospitalEntry | NewOccupationalHealthcareEntry | NewHealthCheckEntry;
+
+export type NewBaseEntry = Omit<BaseEntry, 'id'>;
 
 export enum HealthCheckRating {
     "Healthy" = 0,
@@ -24,7 +24,20 @@ export enum HealthCheckRating {
     healthCheckRating: HealthCheckRating;
   }
 
+  export interface NewHealthCheckEntry extends NewBaseEntry {
+    type: "HealthCheck";
+    healthCheckRating: HealthCheckRating;
+  }
+
   interface HospitalEntry extends BaseEntry {
+    type: "Hospital";
+    discharge: {
+        date: string;
+        criteria: string;
+    };
+  }
+
+  export interface NewHospitalEntry extends NewBaseEntry {
     type: "Hospital";
     discharge: {
         date: string;
@@ -40,6 +53,17 @@ export enum HealthCheckRating {
         endDate: string;
     }
   }
+
+
+  export interface NewOccupationalHealthcareEntry extends NewBaseEntry {
+    type: "OccupationalHealthcare";
+    employerName: string;
+    sickLeave?: {
+        startDate: string;
+        endDate: string;
+    }
+  }
+
 
  interface BaseEntry {
     id: string;
@@ -66,11 +90,16 @@ export type PublicPatient = Omit<PatientEntry, 'ssn' | 'entries'>;
 export type NewPatientEntry = Omit<PatientEntry, 'id'>;
 
 
-
 export enum Gender {
     Female = 'female',
     Male = 'male',
     Other = 'other',
+}
+
+export enum EntryType {
+  Hospital = 'Hospital',
+  HealthCheck = 'HealthCheck',
+  OccupationalHealthcare = 'OccupationalHealthcare',
 }
 
 // Define special omit for unions
