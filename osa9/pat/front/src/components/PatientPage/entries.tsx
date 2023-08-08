@@ -21,6 +21,7 @@ interface Props {
             <TableCell>Specialist</TableCell>
             <TableCell>Diagnosis codes</TableCell>
             <TableCell>Type of entry</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

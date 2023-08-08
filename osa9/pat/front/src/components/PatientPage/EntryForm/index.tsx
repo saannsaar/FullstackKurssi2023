@@ -14,7 +14,7 @@ interface Props {
     setModalOpen:  React.Dispatch<React.SetStateAction<boolean>>;
   }
   
-  const EntryForm = ({ modalOpen, onClose, error, setError, patient, setModalOpen, setPatient } : Props ) => {
+  const EntryForm = ({ modalOpen, onClose, setError, patient, setModalOpen, setPatient, error } : Props ) => {
 
     const [open, setOpen] = useState(false);
 
@@ -36,7 +36,7 @@ interface Props {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>New entry</DialogTitle>
                 <DialogContent>
-                    <AddEntry setModalOpen={setModalOpen} setPatient={setPatient} onCancel={onClose} setError={setError} patient={patient}/>
+                    <AddEntry setModalOpen={setOpen} setPatient={setPatient} onCancel={handleClose} setError={setError} patient={patient} error={error}/>
                 </DialogContent>
             </Dialog>
         </div>

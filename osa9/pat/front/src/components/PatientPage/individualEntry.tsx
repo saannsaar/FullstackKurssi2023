@@ -39,6 +39,7 @@ const HealthCareEntry = ({ entry }: Props ) => {
         </TableCell>
         
         {(() => {
+            
             // Have to check why switch needs the type checked here to work
             if (entry.type === "HealthCheck") {
                 switch (entry.healthCheckRating) {

@@ -40,40 +40,11 @@ interface Props {
         }
     }
     void getCorrectPatient();
-   }, [id])
+   }, [id, patients])
 
-   const submitNewEntry = async (values: EntryFormValues) => {
-    try {
-        if (patient && patient !== undefined) {
-            const entry = await patientService.createEntry(patient, values);
-            const newPatient = {
-                ...patient,
-                entries: [...patient.entries, entry]
-            }
-            setPatient(newPatient);
-            setModalOpen(false);
-        }
-      
-    } catch (e: unknown) {
-      if (axios.isAxiosError(e)) {
-        if (e?.response?.data && typeof e?.response?.data === "string") {
-          const message = e.response.data.replace('Something went wrong. Error: ', '');
-          console.error(message);
-          setError(message);
-        } else {
-          setError("Unrecognized axios error");
-        }
-      } else {
-        console.error("Unknown error", e);
-        setError("Unknown error");
-      }
-    }
-  };
 
    console.log(patient)
     console.log(Object.values(patients));
-
-
     
     // const patient = Object.values(patients).find(patient => patient.id === id.id)
 

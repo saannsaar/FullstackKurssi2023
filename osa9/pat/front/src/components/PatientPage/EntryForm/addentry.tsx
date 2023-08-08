@@ -1,8 +1,9 @@
-import { useState, SyntheticEvent, Dispatch, SetStateAction } from "react";
+import { useState, SyntheticEvent, Dispatch, SetStateAction, useEffect } from "react";
 
-import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, FormControl } from '@mui/material';
+import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, FormControl, Alert } from '@mui/material';
 import patientService from "../../../services/patients";
-import { PatientFormValues, Gender, EntryFormValues, EntryType, NewBaseEntry, HealthCheckRating, Entry, Patient } from "../../../types";
+import diagnoseService from "../../../services/diagnosis";
+import { PatientFormValues, Gender, EntryFormValues, EntryType, NewBaseEntry, HealthCheckRating, Entry, Patient, DiagnoseEntry } from "../../../types";
 import axios from "axios";
 import { apiBaseUrl } from "../../../constants";
 
@@ -12,6 +13,7 @@ interface Props {
   setPatient:  React.Dispatch<React.SetStateAction<Patient | undefined>>;
   setModalOpen:  React.Dispatch<React.SetStateAction<boolean>>;
   patient: Patient;
+  error?: string;
   
 }
 
@@ -25,7 +27,7 @@ const entryTypeOptions: EntryTypeOptions[] = Object.values(EntryType).map(v => (
   value: v, label: v.toString()
 }));
 
-const AddEntry = ({ onCancel, setError, patient, setPatient, setModalOpen }: Props) => {
+const AddEntry = ({ onCancel, setError, patient, setPatient, setModalOpen, error }: Props) => {
   const [description, setDescription] = useState('');
   const [specialist, setSpecialist] = useState('');
   const [date, setDate] = useState('');
@@ -36,6 +38,8 @@ const AddEntry = ({ onCancel, setError, patient, setPatient, setModalOpen }: Pro
   const [selectedDischarge, setSelectedDischarge] = useState('');
   const [dischargeCriteria, setDischargeCriteria] = useState('');
   const [entrytype, setEntrytype] = useState(EntryType.Hospital);
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
+  const [selectedDiagnosisCodes, setSeelectedDiagnosisCodes] = useState<Array<DiagnoseEntry['code']>>([]);
 
   // Entry type Change eventhandler
   const onEntryTypeChange = (event: SelectChangeEvent<string>) => {
@@ -58,6 +62,21 @@ const AddEntry = ({ onCancel, setError, patient, setPatient, setModalOpen }: Pro
       setHealthCearRating(value);
     }
   }
+  useEffect(() => {
+    const getDiagnosis = async () => {
+    
+        await diagnoseService.getAll().then((response) => {
+          
+          setDiagnosisCodes(response.map(d => d['code']))
+        }).catch((error) => {
+          console.log(error.message)
+        })
+      
+    }
+
+    void getDiagnosis();
+  }, [])
+  
 
   const createNewEntry = (newBaseEntry : NewBaseEntry) => {
     switch (entrytype) {
@@ -74,7 +93,7 @@ const AddEntry = ({ onCancel, setError, patient, setPatient, setModalOpen }: Pro
             return {
                 ...newBaseEntry,
                 type: EntryType.HealthCheck,
-                healthCheckRating: healthcearRating,
+                healthCheckRating: parseInt(healthcearRating),
             };
         case EntryType.OccupationalHealthcare:
             return {
@@ -109,7 +128,7 @@ const AddEntry = ({ onCancel, setError, patient, setPatient, setModalOpen }: Pro
         ...patient,
         entries: [...patient.entries, fullEntry]
       }
-      setPatient(newPatient)
+      
       setModalOpen(false)
     }
   } catch (e: unknown) {
@@ -128,11 +147,20 @@ const AddEntry = ({ onCancel, setError, patient, setPatient, setModalOpen }: Pro
   }
 
   };
-
+const handleDiagnosisCodeChange = (event: SelectChangeEvent<typeof selectedDiagnosisCodes>) => {
+  event.preventDefault();
+  console.log(event.target.value);
+  const {target : { value }, } = event;
+   
+    setSeelectedDiagnosisCodes(typeof value === 'string' ? value.split(',') : value);
+  
+}
   
 
   return (
     <div>
+      {error && 
+      <Alert severity="error">{` ${error}`}</Alert>}
       <form onSubmit={addEntry}>
 
      <TextField
@@ -156,6 +184,18 @@ const AddEntry = ({ onCancel, setError, patient, setPatient, setModalOpen }: Pro
           value={description}
           onChange={({ target }) => setDescription(target.value)}
         />
+      <FormControl>
+        <InputLabel>Diagnosis code</InputLabel>
+        <Select labelId="diagnoses_select_label"
+        id="diagnoses_select"
+        multiple value={selectedDiagnosisCodes}
+        onChange={handleDiagnosisCodeChange}
+        label="Diagnosis code">
+        {diagnosisCodes.map((diagnosis, i) => (
+        <MenuItem key={i} value={diagnosis}> {diagnosis}</MenuItem>
+      ))}
+        </Select>
+      </FormControl>
 
 
         <InputLabel style={{ marginTop: 20 }}>Type of entry</InputLabel>
