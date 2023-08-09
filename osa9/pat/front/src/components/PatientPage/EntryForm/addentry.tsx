@@ -93,7 +93,7 @@ const AddEntry = ({ onCancel, setError, patient, setPatient, setModalOpen, error
             return {
                 ...newBaseEntry,
                 type: EntryType.HealthCheck,
-                healthCheckRating: parseInt(healthcearRating),
+                healthCheckRating: healthcearRating,
             };
         case EntryType.OccupationalHealthcare:
             return {
