@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 
 const AppiBar = () => {
   return <View style={styles.container}>
-   <ScrollView>
+   <ScrollView horizontal>
     <NavTab />
 
    </ScrollView>

@@ -26,6 +26,7 @@ const NavTab = () => {
         <Link style={{paddingLeft:10, paddingTop:5}} to={'/signin'}>
             <SignIn />
           </Link>
+          
 
       </Pressable></>
     );
