@@ -17,4 +17,4 @@ package.json
 package-lock.json
 babel.config.js
 assets
-.expo-shared
+.expo-shared 
