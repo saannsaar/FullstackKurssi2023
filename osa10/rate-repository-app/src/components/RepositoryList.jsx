@@ -1,20 +1,9 @@
 import { FlatList, View, StyleSheet } from 'react-native';
-import Text from './Text';
+import individualItem from './RepositoryItem';
 
 const styles = StyleSheet.create({
     container: {
-      padding: 20,
-    },
-    text: {
-        color: 'grey',
-        fontSize: 14,
-      },
-      blueText: {
-        color: 'blue',
-      },
-      bigText: {
-        fontSize: 24,
-        fontWeight: '700',
+    height: 10,
       },
   });
 
@@ -66,21 +55,8 @@ const repositories = [
 ];
 
 
-const ItemSeparator = () => <View style={styles.separator} />;
+const ItemSeparator = () => <View style={styles.seperate} />;
 
-const Item = (props) => (
-  
-
-        <View>
-        <Text color="textSecondary" style={{ paddingTop: 10}} fontWeight="bold">Full name: {props.fullName}</Text>
-        <Text color="textSecondary">Description: {props.description}</Text>
-        <Text color="textSecondary">Language: {props.language}</Text>
-        <Text color="textSecondary">Stars: {props.stars}</Text>
-        <Text color="textSecondary">Forks: {props.forks}</Text>
-        <Text color="textSecondary">Reviews: {props.reviews}</Text>
-        <Text color="textSecondary">Ratings: {props.ratings}</Text>
-    </View>
-    )
    
 
 console.log("repoLisjt")
@@ -88,16 +64,11 @@ console.log(repositories)
 const RepositoryList = () => {
 
     console.log(repositories)
+    console.log(repositories.length)
   return (
     <><FlatList
           data={repositories}
-          renderItem={({ item }) =>
-           <Item fullName={item.fullName} description={item.description} 
-           language={item.language}
-           stars={item.stargazersCount}
-           forks={item.forksCount}
-           reviews={item.reviewCount}
-           ratings={item.ratingAverage} />}
+         renderItem={individualItem}
           ItemSeparatorComponent={ItemSeparator} /></>
   );
 };

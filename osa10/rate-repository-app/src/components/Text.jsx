@@ -1,4 +1,4 @@
-import { Text as NativeText, StyleSheet } from 'react-native';
+import { Text as OriginalText , StyleSheet } from 'react-native';
 
 import theme from '../theme';
 
@@ -24,16 +24,18 @@ const styles = StyleSheet.create({
 });
 
 const Text = ({ color, fontSize, fontWeight, style, ...props }) => {
+  console.log(style)
   const textStyle = [
     styles.text,
     color === 'textSecondary' && styles.colorTextSecondary,
     color === 'primary' && styles.colorPrimary,
-    fontSize === 'subheading' && styles.fontSizeSubheading,
+    fontSize === 'subHeading' && styles.fontSizeSubheading,
     fontWeight === 'bold' && styles.fontWeightBold,
+
     style,
   ];
 
-  return <NativeText style={textStyle} {...props} />;
+  return <OriginalText style={textStyle} {...props} />;
 };
 
 export default Text;
