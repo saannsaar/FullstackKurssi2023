@@ -1,6 +1,7 @@
 import { Button, View, StyleSheet } from "react-native";
 import FormikTextInput from "./FormikTextInput"
 import { Formik } from 'formik';
+import validationSchema from "../validations/SigninvalidationSchema";
 
 const initialValues= {
     email: '',
@@ -15,13 +16,13 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         margin: 10,
-
-    }
+    },
+   
 });
 
 const SignInForm = () => {
     return (
-        <Formik initialValues={initialValues} onSubmit={(values) => console.log(values)}>
+        <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={(values) => console.log(values)}>
             {({ handleSubmit }) => (
                 <View style={styles.formContainer}>
                     <FormikTextInput name={'email'} placeholder='Email'/>

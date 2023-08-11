@@ -2,7 +2,8 @@ import { TextInput as NativeTextInput, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     error: {
-        borderBlockColor: '#e6221c'
+        borderColor: '#ff4a59',
+        borderWidth: 2,
     },
     inputStyle: {
         borderColor: '#8cc8d1',
