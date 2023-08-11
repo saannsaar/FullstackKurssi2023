@@ -2,24 +2,32 @@ import React from "react";
 import { Pressable, StyleSheet } from 'react-native';
 import { Link } from 'react-router-native';
 import Title from "./Title";
+import SignIn from "./SignIn";
 
 const styles = StyleSheet.create({
     container: {
       paddingHorizontal: 10,
-      justifyContent: 'center',
-      paddingTop: 25,
+      paddingTop: 20,
       paddingBottom: 15,
+      flexDirection: 'row',
+      width: '100%',
     },
   });
 
 
 const NavTab = () => {
     return (
-      <Pressable style={styles.container}>
-        <Link to={'/'}>
+      <><Pressable style={styles.container}>
+
+        <Link style={{paddingLeft:10}}to={'/'}>
           <Title>Repositories</Title>
         </Link>
-      </Pressable>
+       
+        <Link style={{paddingLeft:10, paddingTop:5}} to={'/signin'}>
+            <SignIn />
+          </Link>
+
+      </Pressable></>
     );
   };
   

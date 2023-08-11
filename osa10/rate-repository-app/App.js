@@ -1,4 +1,5 @@
 import Main from './src/components/Main';
+import { StatusBar } from 'expo-status-bar';
 import { NativeRouter } from 'react-router-native';
 
 
@@ -8,7 +9,8 @@ const App = () => {
     <>
     <NativeRouter>
       <Main />
-      </NativeRouter></>
+      </NativeRouter>
+      <StatusBar style="auto" /></>
   )
 };
 
