@@ -12,7 +12,7 @@ export const GET_REPOSITORIES = gql`
                     forksCount
                     stargazersCount
                     ratingAverage
-                    reiewCount
+                    reviewCount
                     ownerAvatarUrl
             }
         }

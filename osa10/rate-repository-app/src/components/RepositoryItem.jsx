@@ -43,26 +43,26 @@ const individualItem = ( item ) => {
             
           }}
         >
-          <Image style={styles.pictureContainer} source={{ uri: item.ownerAvatarUrl }} />
+          <Image style={styles.pictureContainer} source={{ uri: item.item.ownerAvatarUrl }} />
           <View style={styles.descriptionContainer}>
             <View style={{paddingBottom:8}}>
               <Text fontWeight={'bold'} fontSize={'subHeading'}>
-                {item.fullName}
+                {item.item.fullName}
               </Text>
             </View>
             <View style={{paddingBottom:8}} >
-              <Text style={{ flexWrap:'wrap', flexShrink:1}}  color={'textSecondary'}>{item.description}</Text>
+              <Text style={{ flexWrap:'wrap', flexShrink:1}}  color={'textSecondary'}>{item.item.description}</Text>
             </View>
             <View >
-              <LanguageBox item={item.language} />
+              <LanguageBox item={item.item.language} />
             </View>
           </View>
         </View>
         <View style={styles.numberContainer}>
-          <NumberItem numberValue={item.stargazersCount} numberName={'Stars'} />
-          <NumberItem numberValue={item.forksCount} numberName={'Forks'} />
-          <NumberItem numberValue={item.reviewCount} numberName={'Reviews'} />
-          <NumberItem numberValue={item.ratingAverage} numberName={'Ratings'} />
+          <NumberItem numberValue={item.item.stargazersCount} numberName={'Stars'} />
+          <NumberItem numberValue={item.item.forksCount} numberName={'Forks'} />
+          <NumberItem numberValue={item.item.reviewCount} numberName={'Reviews'} />
+          <NumberItem numberValue={item.item.ratingAverage} numberName={'Ratings'} />
         </View>
       </View>
         )

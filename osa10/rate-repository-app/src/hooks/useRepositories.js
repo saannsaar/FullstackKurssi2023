@@ -7,10 +7,13 @@ const useRepositories = () => {
     fetchPolicy: "cache-and-network"
   });
 
+
   const [repoData, setRepoData] = useState();
 
   const fetchData = async () => {
+    console.log(data)
     if (data !== undefined && data.repositories !== undefined) {
+      console.log(data)
         setRepoData(data.repositories)
     }
   }
@@ -23,6 +26,7 @@ const useRepositories = () => {
     console.log(error);
   } 
 
+  console.log(repoData)
   return { repoData, loading, refetch: fetchData }
 };
 

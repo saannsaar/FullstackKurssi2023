@@ -6,7 +6,7 @@ import Constants from 'expo-constants';
 import createApolloClient from './src/utils/apolloClient';
 
 const apolloClient = createApolloClient();
-console.log(Constants.manifest)
+console.log(Constants.manifest.extra)
 console.log(apolloClient)
 
 const App = () => {

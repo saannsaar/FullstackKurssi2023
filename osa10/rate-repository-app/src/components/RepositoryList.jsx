@@ -16,11 +16,11 @@ const ItemSeparator = () => <View style={styles.seperate} />;
 console.log("repoLisjt")
 
 const RepositoryList = () => {
-  const { repositories, loading } = useRepositories();
-  console.log(repositories, loading)
+  const { repoData, loading } = useRepositories();
+  console.log(repoData)
 
-  const repositoryNodes = repositories && !loading ?
-  repositories.edges.map(edge => edge.node) : [];
+  const repositoryNodes = repoData && !loading ?
+  repoData.edges.map(edge => edge.node) : [];
 
     console.log(repositoryNodes)
     console.log(repositoryNodes.length)
