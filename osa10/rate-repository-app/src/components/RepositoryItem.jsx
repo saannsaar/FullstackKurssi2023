@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   });
 
 const individualItem = ( item ) => {
-    console.log(item)
+   
     if (item) {
     return (
         <View style={styles.container}>

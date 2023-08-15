@@ -20,9 +20,9 @@ const NumberItem = ({ numberValue, numberName }) => {
     // If number is more than 1000 it will be presented in thousands 
     //  with the precision of one decimal and with a "k" suffix.
     if (numberValue >= 1000) {
-        console.log(numberValue)
+       
       const newNumber = (numberValue / 1000).toFixed(1);
-      console.log(newNumber)
+     
       
     // If the decimal is "0", remove it
     // 19.0 -> 19

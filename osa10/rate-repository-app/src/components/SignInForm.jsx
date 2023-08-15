@@ -3,6 +3,7 @@ import FormikTextInput from "./FormikTextInput"
 import { Formik } from 'formik';
 import validationSchema from "../validations/SigninvalidationSchema";
 import useLogin from "../hooks/useLogin";
+import { useNavigate } from "react-router-native";
 
 
 const initialValues= {
@@ -24,18 +25,23 @@ const styles = StyleSheet.create({
 
 
 const SignInForm = () => {
-    const [logIn, result] = useLogin();
+    const [logIn] = useLogin();
+    const navigate = useNavigate();
 
     const onSubmit = async (values) => {
         
-        console.log("LOGIN");
+       
         const { username, password } = values;
-    
+        console.log("LOGIN front");
+        console.log(values)
+       
+        
         try {
-            const { data } = await logIn({ username, password });
-            console.log(data);
+            await logIn({ username, password });
+            navigate('/');
+           
         } catch(error) {
-            console.log(error);
+            console.log("ERROR frontista: ", error);
         }
     }
 
