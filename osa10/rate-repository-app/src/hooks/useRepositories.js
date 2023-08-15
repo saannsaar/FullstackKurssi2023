@@ -7,7 +7,7 @@ const useRepositories = () => {
     fetchPolicy: "cache-and-network"
   });
 
-
+  console.log(data)
   const [repoData, setRepoData] = useState();
 
   const fetchData = async () => {

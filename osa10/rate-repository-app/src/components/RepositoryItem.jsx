@@ -1,7 +1,8 @@
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, Pressable } from "react-native";
 import Text from "./Text";
 import LanguageBox from "./LanguageBox";
 import NumberItem from "./NumberItem";
+import { useNavigate } from "react-router-native";
 
 const styles = StyleSheet.create({
     container: {
@@ -33,11 +34,12 @@ const styles = StyleSheet.create({
   });
 
 const RepositoryItem = ({ item }) => {
-   
+   const navigate = useNavigate();
     if (item) {
       console.log(item)
     return (
-        <View testID='RepositoryItem' style={styles.container}>
+       <Pressable onPress={() => navigate(`/repositories/${item.id}`)}>
+         <View testID='RepositoryItem' style={styles.container}>
         <View
           style={{
             flexDirection: 'row',
@@ -66,6 +68,7 @@ const RepositoryItem = ({ item }) => {
           <NumberItem numberValue={item.ratingAverage} numberName={'Ratings'} />
         </View>
       </View>
+       </Pressable>
         )
     }
     
