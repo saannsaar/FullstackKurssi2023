@@ -14,3 +14,10 @@ mutation createReview($review: CreateReviewInput!) {
         repositoryId
     }
 }`
+
+export const SIGN_UP = gql`
+mutation CreateUser($user: CreateUserInput!) {
+    createUser(user: $user) {
+        id
+    }
+}`
