@@ -4,6 +4,7 @@ import LanguageBox from "./LanguageBox";
 import NumberItem from "./NumberItem";
 import { useNavigate, useParams } from "react-router-native";
 import useRepository from "../hooks/useRepository";
+import ReviewItem from "./ReviewItem";
 
 
 const styles = StyleSheet.create({
@@ -52,6 +53,7 @@ const SingleRepository = () => {
      
 
     return (
+       <>
         <Pressable onPress={() => navigate(`/repositories/${item.id}`)}>
          <View testID='RepositoryItem' style={styles.container}>
         <View
@@ -81,9 +83,14 @@ const SingleRepository = () => {
           <NumberItem numberValue={repository.reviewCount} numberName={'Reviews'} />
           <NumberItem numberValue={repository.ratingAverage} numberName={'Ratings'} />
         </View>
+        <Button color='#68bdc4' width='50%' onPress={() => Linking.openURL(repository.url)} title='Open in GitHub'/>
       </View>
-      <Button color='#68bdc4' width='50%' onPress={() => Linking.openURL(repository.url)} title='Open in GitHub'/>
-       </Pressable>
+     
+       </Pressable> 
+       
+       {repository.reviews?.edges ?  <ReviewItem item={repository.reviews}/> : null}
+        </>
+       
     )
 }
 
