@@ -13,7 +13,7 @@ const theme = {
     fontSizes: {
       body: 14,
       subheading: 16,
-      navbarTitle: 26,
+      navbarTitle: 22,
     },
     fonts: Platform.select({
       default: 'System',

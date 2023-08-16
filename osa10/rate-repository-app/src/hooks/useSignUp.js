@@ -8,7 +8,7 @@ const useSignUp = () => {
 
     const signUp = async ({ username, password }) => {
 
-        const { username, password } = user;
+        const user = { username, password } ;
         try {
             const { data } = await mutate({ variables: user });
             console.log(data);

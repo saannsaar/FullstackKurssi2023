@@ -35,6 +35,11 @@ const NavTab = () => {
         <Link style={{paddingLeft:10}}to={'/create-new-review'}>
           <Title>Review</Title>
         </Link>
+        <Link style={{paddingLeft:10}}to={'/signup'}>
+              <Title>
+                Sign up
+             </Title>
+          </Link>
        {data?.me ? <><Link style={{ paddingLeft: 10, paddingTop: 5 }} to={'/signin'} onPress={logOut}>
           <SignOut />
         </Link></>
