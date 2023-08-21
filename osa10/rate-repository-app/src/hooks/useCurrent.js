@@ -1,16 +1,18 @@
 import { useQuery } from "@apollo/client";
 import { CURRENT_USER } from "../graphql/queries";
 
-const useCurrent = () => {
-    const { loading, data } = useQuery(CURRENT_USER, {
+const useCurrent = (includeReviews) => {
+    console.log("USe current")
+    const { data, loading } = useQuery(CURRENT_USER, {
+        variables: { includeReviews: includeReviews ?? false },
         fetchPolicy: 'cache-and-network',
     });
 
-    if (loading) return <div>Loading...</div>;
+   
 
     console.log('Current', data)
 
-    return { me: data?.me };
+    return { me: data?.me, loading };
 };
 
 export default useCurrent;

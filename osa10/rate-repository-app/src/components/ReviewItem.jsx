@@ -49,7 +49,7 @@ const ReviewItem = (item) => {
 }
 
 
-const SingleReviewItem = (review) => {
+export const SingleReviewItem = (review) => {
     console.log(review);
     console.log(review.review.rating)
 

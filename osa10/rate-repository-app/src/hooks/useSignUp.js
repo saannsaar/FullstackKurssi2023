@@ -6,11 +6,14 @@ const useSignUp = () => {
 
     const [mutate, result] = useMutation(SIGN_UP);
 
+
+    console.log("USE SIGN UP", result, mutate)
     const signUp = async ({ username, password }) => {
 
-        const user = { username, password } ;
+        
+        console.log(username, password)
         try {
-            const { data } = await mutate({ variables: user });
+            const { data } = await mutate({ variables: { user: { username, password }}  });
             console.log(data);
             return data;
         } catch (error) {

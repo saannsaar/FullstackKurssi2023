@@ -11,15 +11,14 @@ const useLogin = () => {
     const [mutate, result] = useMutation(LOG_IN);
    
    
-    // console.log("USE LOGIN", result, mutate)
+    console.log("USE LOGIN", result, mutate)
     const signIn = async ({ username, password }) => {
-       if (typeof username === "string") {
-        console.log("On string")
-       }
-       const credentials = { username, password };
- 
+       
+       console.log("useLogin")
+       console.log(username, password)
+       
         try {
-            const { data } = await mutate({ variables: { credentials } });
+            const { data } = await mutate({ variables: { credentials: {username, password} } });
             
             if (data) {
              await authStorage.setAccessToken(data.authenticate.accessToken);

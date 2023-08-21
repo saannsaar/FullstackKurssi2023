@@ -24,12 +24,14 @@ const styles = StyleSheet.create({
 
 
 const SignInForm = () => {
+    console.log("HEIs")
     const [logIn] = useLogin();
+    
     const navigate = useNavigate();
-
+    console.log("login")
     const onSubmit = async (values) => {
         
-       
+       console.log("HEI")
         const { username, password } = values;
         console.log("LOGIN front");
         console.log(values)
@@ -44,7 +46,18 @@ const SignInForm = () => {
         }
     }
 
-    return <SignInFormContainer onSubmit={onSubmit} />
+    return (
+        <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={onSubmit}>
+    {({ handleSubmit }) => (
+        <View style={styles.formContainer}>
+            <FormikTextInput name={'username'} placeholder='Username'/>
+            <FormikTextInput name={'password'} placeholder='Password' secureTextEntry/>
+            <Button color='#68bdc4' width='50%' onPress={handleSubmit} title='Sign in!'/>
+            
+        </View>
+    )}
+</Formik>
+    )
 };
 
 export const SignInFormContainer = ({ onSubmit }) => {

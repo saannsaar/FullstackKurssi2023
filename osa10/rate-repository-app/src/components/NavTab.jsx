@@ -25,6 +25,7 @@ const NavTab = () => {
 
   const {data } = useQuery(CURRENT_USER);
   console.log(data)
+  console.log(data?.me)
   const logOut = useLogOut();
     return (
       <><Pressable style={styles.container}>
@@ -42,7 +43,11 @@ const NavTab = () => {
           </Link>
        {data?.me ? <><Link style={{ paddingLeft: 10, paddingTop: 5 }} to={'/signin'} onPress={logOut}>
           <SignOut />
-        </Link></>
+        </Link>
+        <Link to={'/my-reviews'}>
+        <Title>
+          My Reviews!</Title></Link>
+        </>
         :
           <Link style={{paddingLeft:10, paddingTop:5}} to={'/signin'}>
           <SignIn />
