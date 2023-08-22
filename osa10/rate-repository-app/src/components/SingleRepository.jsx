@@ -43,6 +43,7 @@ const SingleRepository = () => {
     console.log(id);
 
     const { data, loading } = useRepository(id);
+    
 
     const repository = data?.repository;
 

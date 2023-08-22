@@ -32,6 +32,7 @@ query getAuthorizedUser($includeReviews: Boolean = false) {
                     text
                     rating 
                     createdAt
+                    repositoryId
                     user {
                         id
                         username
@@ -62,6 +63,7 @@ query getRepository($id: ID!) {
                     text
                     rating 
                     createdAt
+                    repositoryId
                     user {
                         id
                         username
