@@ -59,7 +59,7 @@ export const SingleReviewItem = (review) => {
     console.log(review.review.rating)
 
     const {  me } = useCurrent(true);
-    console.log(me.username);
+    console.log(me);
     const [deleteReview] = useDelete();
     console.log(review.review.user.username)
     if (me.username === review.review.user.username) {
@@ -108,4 +108,4 @@ export const SingleReviewItem = (review) => {
             </>
     )
 }
-export default ReviewItem;
+export default SingleReviewItem;

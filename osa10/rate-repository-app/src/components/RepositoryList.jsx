@@ -36,8 +36,8 @@ export class RepositoryContainer extends React.Component {
 
   render() {
     
-    const { repositories, loading } = this.props;
-    const repositoryNodes = repositories?.repositories?.edges?.map(e => e.node) || [];
+    const { repositories, loading, onEndReached } = this.props;
+    const repositoryNodes = repositories?.edges?.map(e => e.node) || [];
     console.log(repositoryNodes)
     if (loading) return (<View><Text>Loading repositories...</Text></View>);
   else if (!repositoryNodes) return (<View><Text>No repositories</Text></View>);
@@ -47,7 +47,9 @@ export class RepositoryContainer extends React.Component {
             data={repositoryNodes}
            renderItem={({item}) => <RepositoryItem testID='RepositoryItem' item={item}/>}
             ItemSeparatorComponent={ItemSeparator}
-            ListHeaderComponent={this.renderHeader} />
+            ListHeaderComponent={this.renderHeader}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.5} />
     )
   }
 
@@ -55,7 +57,7 @@ export class RepositoryContainer extends React.Component {
 
 const RepositoryList = () => {
   
-  const { data: repositories, loading, refetch } = useRepositories();
+  const { repositories, loading, fetchMore, refetch } = useRepositories({ first: 8 });
   console.log(repositories)
 
   const [searchWord, setSearchWord] = useState('');
@@ -66,20 +68,24 @@ const RepositoryList = () => {
     switch(order) {
       case 'latest':
         console.log("latest")
-        refetch({searchKeyword: debounceSearch, orderBy: 'CREATED_AT', orderDirection: 'DESC'});
+        refetch({first: 8, searchKeyword: debounceSearch, orderBy: 'CREATED_AT', orderDirection: 'DESC'});
         break;
       case 'highest':
-        refetch({searchKeyword: debounceSearch, orderBy: 'RATING_AVERAGE', orderDirection: 'DESC'});
+        refetch({first: 8, searchKeyword: debounceSearch, orderBy: 'RATING_AVERAGE', orderDirection: 'DESC'});
         break;
       case 'lowest': 
-        refetch({searchKeyword: debounceSearch, orderBy: 'RATING_AVERAGE', orderDirection: 'ASC'});
+        refetch({first: 8, searchKeyword: debounceSearch, orderBy: 'RATING_AVERAGE', orderDirection: 'ASC'});
         break;
       default:
         throw new Error(`Orderby: ${orderBy}, Orderdirection: ${orderDirection}`)
     }
   }, [debounceSearch, order]);
+
+  const onEndReached = () => {
+    fetchMore();
+  }
   return (
-    <RepositoryContainer repositories={repositories} loading={loading} order={order} setOrder={setOrder} searchWord={searchWord} setSearchWord={setSearchWord}/>
+    <RepositoryContainer repositories={repositories} loading={loading} order={order} setOrder={setOrder} searchWord={searchWord} onEndReached={onEndReached} setSearchWord={setSearchWord}/>
   )    
 };
 

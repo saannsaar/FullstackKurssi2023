@@ -1,10 +1,10 @@
-import { View, StyleSheet, Image, Pressable, Button, Linking } from "react-native";
+import { View, FlatList, StyleSheet, Image, Pressable, Button, Linking } from "react-native";
 import Text from "./Text";
 import LanguageBox from "./LanguageBox";
 import NumberItem from "./NumberItem";
 import { useNavigate, useParams } from "react-router-native";
 import useRepository from "../hooks/useRepository";
-import ReviewItem from "./ReviewItem";
+import SingleReviewItem from "./ReviewItem";
 
 
 const styles = StyleSheet.create({
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     },
 
   });
+  const ItemSeparator = () => <View style={styles.seperate} />;
 
 const SingleRepository = () => {
 
@@ -42,14 +43,22 @@ const SingleRepository = () => {
 
     console.log(id);
 
-    const { data, loading } = useRepository(id);
+    const { repository, fetchMore, loading } = useRepository({ id, first: 5 });
     
+    console.log(repository); 
+    const reviewNodes = repository?.reviews?.edges.map(edge => edge.node) || [];
 
-    const repository = data?.repository;
+    console.log(reviewNodes);
+
+    const onEndReached = () => {
+      fetchMore();
+    }
+
+
 
     console.log(repository);
     if (loading) return (<View><Text>Loading...</Text></View>);
-    else if (!data) return (<View><Text>Repository from ${ id } not found.</Text></View>);
+    else if (!repository) return (<View><Text>Repository from ${ id } not found.</Text></View>);
 
      
 
@@ -89,7 +98,12 @@ const SingleRepository = () => {
      
        </Pressable> 
        
-       {repository.reviews?.edges ?  <ReviewItem item={repository.reviews}/> : null}
+       {repository.reviews?.edges ?  <FlatList 
+       data={reviewNodes}
+       renderItem={({item}) => <SingleReviewItem review={item} />}
+       ItemSeparatorComponent={ItemSeparator}
+       onEndReached={onEndReached}
+       onEndReachedTreshold={0.5}/> : null}
         </>
        
     )
